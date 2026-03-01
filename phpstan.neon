@@ -1,0 +1,41 @@
+includes:
+    - phar://phpstan.phar/conf/bleedingEdge.neon
+
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: 10
+
+    phpVersion:
+        min: 80000 # PHP 8.0
+        max: 80500 # PHP 8.5
+
+    checkBenevolentUnionTypes: true
+    checkMissingCallableSignature: true
+    checkTooWideParameterOutInProtectedAndPublicMethods: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkTooWideThrowTypesInProtectedAndPublicMethods: true
+    checkUninitializedProperties: true
+    rememberPossiblyImpureFunctionValues: false
+    reportAlwaysTrueInLastCondition: true
+    reportAnyTypeWideningInVarTag: true
+    reportPossiblyNonexistentConstantArrayOffset: true
+    reportPossiblyNonexistentGeneralArrayOffset: true
+
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            throwTypeCovariance: true
+            tooWideImplicitThrowType: true
+            tooWideThrowType: true
+
+        uncheckedExceptionClasses:
+            - Error
+            - PHPUnit\Framework\ExpectationFailedException
+
+    paths:
+        - lib
+        - tests
