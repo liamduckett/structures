@@ -15,6 +15,12 @@ use Liamduckett\Structures\Concerns\HasArrayAccess;
  */
 final class Dictionary implements ArrayAccess, IteratorAggregate
 {
+    // TODO: get
+    // TODO: set
+    // TODO: interface?
+    // TODO: tests
+    // TODO: list
+
     /** @use HasArrayAccess<non-empty-string, T> */
     use HasArrayAccess;
 
@@ -61,14 +67,7 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
 
     // Conversions ---
 
-    /**
-     * @return iterable<non-empty-string, T>
-     */
-    public function all(): iterable
-    {
-        return $this->items;
-    }
-
+    // TODO: doesnt throw
     public function getIterator(): iterable
     {
         /**
@@ -79,6 +78,14 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
         $iterator = new ArrayIterator($this->items);
 
         return $iterator;
+    }
+
+    /**
+     * @return iterable<non-empty-string, T>
+     */
+    public function items(): iterable
+    {
+        return $this->items;
     }
 
     /**

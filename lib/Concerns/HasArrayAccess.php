@@ -6,6 +6,8 @@ use Liamduckett\Structures\Exceptions\InvalidOffsetException;
 use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 
 /**
+ * @internal
+ *
  * @template TKey of array-key
  * @template TValue of mixed
  */
