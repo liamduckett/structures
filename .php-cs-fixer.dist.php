@@ -18,6 +18,9 @@ return (new Config())
         'return_assignment' => [
             'skip_named_var_tags' => true,
         ],
+        'multiline_whitespace_before_semicolons' => [
+            'strategy' => 'no_multi_line',
+        ],
     ])
     ->setFinder(
         (new Finder())

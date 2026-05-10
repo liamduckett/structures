@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,18 +13,23 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class ConvertingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     // array ---
 
     public function testArrayReturnsTheUnderlyingArray(): void
     {
         $array = Dictionary::make()
-            ->merge(['foo' => 1, 'bar' => 2])
-            ->array()
-        ;
+            ->merge([
+                'foo' => 1,
+                'bar' => 2,
+            ])
+            ->array();
 
-        $this->assertSame(['foo' => 1, 'bar' => 2], $array);
+        $this->assertSame([
+            'foo' => 1,
+            'bar' => 2,
+        ], $array);
     }
 
     // getIterator ---
@@ -32,11 +37,16 @@ class ConvertingTest extends TestCase
     public function testGetIteratorCanBeIterated(): void
     {
         $iterator = Dictionary::make()
-            ->merge(['foo' => 1, 'bar' => 2])
-            ->getIterator()
-        ;
+            ->merge([
+                'foo' => 1,
+                'bar' => 2,
+            ])
+            ->getIterator();
 
-        $this->assertSame(['foo' => 1, 'bar' => 2], iterator_to_array($iterator));
+        $this->assertIterator($iterator, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
     }
 
     // iterator ---
@@ -44,10 +54,15 @@ class ConvertingTest extends TestCase
     public function testIteratorCanBeIterated(): void
     {
         $iterator = Dictionary::make()
-            ->merge(['foo' => 1, 'bar' => 2])
-            ->iterator()
-        ;
+            ->merge([
+                'foo' => 1,
+                'bar' => 2,
+            ])
+            ->iterator();
 
-        $this->assertSame(['foo' => 1, 'bar' => 2], iterator_to_array($iterator));
+        $this->assertIterator($iterator, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
     }
 }

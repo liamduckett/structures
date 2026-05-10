@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,11 +13,14 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class RemovingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     public function testRemoveRemovesAnExistingKey(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $withoutFoo = $dictionary->remove('foo');
 
@@ -39,7 +42,10 @@ class RemovingTest extends TestCase
 
     public function testRemoveIsImmutable(): void
     {
-        $original = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $original = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $withoutFoo = $original->remove('foo');
 

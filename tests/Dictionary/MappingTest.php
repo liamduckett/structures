@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,13 +13,16 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class MappingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     // Map ---
 
     public function testMapTransformsValues(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $mapped = $dictionary->map(fn (int $value) => $value * 2);
 
@@ -31,7 +34,10 @@ class MappingTest extends TestCase
 
     public function testMapPassesKeyToCallable(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $mapped = $dictionary->map(fn (int $value, string $key) => $key);
 
@@ -43,16 +49,23 @@ class MappingTest extends TestCase
 
     public function testMapPreservesKeys(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $mapped = $dictionary->map(fn (int $value) => $value * 10);
+        $keys = $mapped->keys();
 
-        $this->assertSame(['foo', 'bar'], $mapped->keys());
+        $this->assertSequence($keys, ['foo', 'bar']);
     }
 
     public function testMapIsImmutable(): void
     {
-        $original = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $original = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $mapped = $original->map(fn (int $value) => $value * 2);
 

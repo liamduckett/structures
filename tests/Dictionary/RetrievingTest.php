@@ -5,7 +5,7 @@ namespace Tests\Dictionary;
 use Liamduckett\Structures\Dictionary;
 use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -14,16 +14,18 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class RetrievingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     // get ---
 
     public function testGetReturnsTheValueForAnExistingKey(): void
     {
         $value = Dictionary::make()
-            ->merge(['foo' => 1, 'bar' => 2])
-            ->get('foo')
-        ;
+            ->merge([
+                'foo' => 1,
+                'bar' => 2,
+            ])
+            ->get('foo');
 
         $this->assertSame(1, $value);
     }
@@ -40,33 +42,20 @@ class RetrievingTest extends TestCase
     public function testKeysReturnsAllKeys(): void
     {
         $keys = Dictionary::make()
-            ->merge(['foo' => 1, 'bar' => 2])
-            ->keys()
-        ;
+            ->merge([
+                'foo' => 1,
+                'bar' => 2,
+            ])
+            ->keys();
 
-        $this->assertSame(['foo', 'bar'], $keys);
+        $this->assertSequence($keys, ['foo', 'bar']);
     }
 
     public function testKeysReturnsEmptyForAnEmptyDictionary(): void
     {
-        $this->assertSame([], Dictionary::make()->keys());
-    }
+        $keys = Dictionary::make()->keys();
 
-    // items ---
-
-    public function testItemsReturnsAllItems(): void
-    {
-        $items = Dictionary::make()
-            ->merge(['foo' => 1, 'bar' => 2])
-            ->items()
-        ;
-
-        $this->assertSame(['foo' => 1, 'bar' => 2], $items);
-    }
-
-    public function testItemsReturnsEmptyForAnEmptyDictionary(): void
-    {
-        $this->assertSame([], Dictionary::make()->items());
+        $this->assertSequence($keys, []);
     }
 
     // values ---
@@ -74,15 +63,19 @@ class RetrievingTest extends TestCase
     public function testValuesStripsStringKeys(): void
     {
         $values = Dictionary::make()
-            ->merge(['foo' => 1, 'bar' => 2])
-            ->values()
-        ;
+            ->merge([
+                'foo' => 1,
+                'bar' => 2,
+            ])
+            ->values();
 
-        $this->assertSame([1, 2], $values);
+        $this->assertSequence($values, [1, 2]);
     }
 
     public function testValuesReturnsEmptyForAnEmptyDictionary(): void
     {
-        $this->assertSame([], Dictionary::make()->values());
+        $values = Dictionary::make()->values();
+
+        $this->assertSequence($values, []);
     }
 }

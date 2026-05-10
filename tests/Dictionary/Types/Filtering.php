@@ -16,4 +16,4 @@ assertType('Liamduckett\Structures\Dictionary<int>', $filtered);
 
 $keys = $dictionary->search(1);
 
-assertType('iterable<non-empty-string>', $keys);
+assertType('Liamduckett\Structures\Sequence<non-empty-string>', $keys);

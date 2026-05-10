@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,11 +13,14 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class CreatingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     public function testMakeWithAnArray(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $this->assertDictionary($dictionary, [
             'foo' => 1,
@@ -27,7 +30,10 @@ class CreatingTest extends TestCase
 
     public function testMakeWithAnIterable(): void
     {
-        $dictionary = Dictionary::make($this->buildTypedIterator(['foo' => 1, 'bar' => 2]));
+        $dictionary = Dictionary::make($this->buildTypedIterator([
+            'foo' => 1,
+            'bar' => 2,
+        ]));
 
         $this->assertDictionary($dictionary, [
             'foo' => 1,

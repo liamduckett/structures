@@ -16,8 +16,7 @@
     "authors": [
         {
             "name": "Liam Duckett",
-            "email": "liamduckett2@gmail.com",
-            "role": "Developer"
+            "email": "liamduckett2@gmail.com"
         }
     ],
     "require": {

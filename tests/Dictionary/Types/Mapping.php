@@ -11,3 +11,7 @@ $dictionary = Dictionary::make(['foo' => 1]);
 $mapped = $dictionary->map(fn (int $value) => $value * 2);
 
 assertType('Liamduckett\Structures\Dictionary<int>', $mapped);
+
+$mappedToBool = $dictionary->map(fn (int $value) => $value > 0);
+
+assertType('Liamduckett\Structures\Dictionary<bool>', $mappedToBool);

@@ -104,27 +104,21 @@ final class Dictionary implements IteratorAggregate
     }
 
     /**
-     * @return iterable<non-empty-string>
+     * @return Sequence<non-empty-string>
      */
-    public function keys(): iterable
+    public function keys(): Sequence
     {
-        return array_keys($this->items);
+        return new Sequence(array_keys($this->items));
     }
 
     /**
-     * @return iterable<non-empty-string, T>
+     * @return Sequence<T>
      */
-    public function items(): iterable
+    public function values(): Sequence
     {
-        return $this->items;
-    }
-
-    /**
-     * @return iterable<T>
-     */
-    public function values(): iterable
-    {
-        return array_values($this->items);
+        return new Sequence(array_values(
+            $this->items
+        ));
     }
 
     // Converting ---
@@ -169,9 +163,9 @@ final class Dictionary implements IteratorAggregate
     /**
      * @param T $value
      *
-     * @return iterable<non-empty-string>
+     * @return Sequence<non-empty-string>
      */
-    public function search(mixed $value): iterable
+    public function search(mixed $value): Sequence
     {
         $results = [];
 
@@ -181,7 +175,7 @@ final class Dictionary implements IteratorAggregate
             }
         }
 
-        return $results;
+        return new Sequence($results);
     }
 
     // Mapping ---

@@ -18,16 +18,10 @@ assertType('int', $missing);
 
 $keys = $dictionary->keys();
 
-assertType('iterable<non-empty-string>', $keys);
-
-// Items ---
-
-$items = $dictionary->items();
-
-assertType('iterable<non-empty-string, int>', $items);
+assertType('Liamduckett\Structures\Sequence<non-empty-string>', $keys);
 
 // Values ---
 
 $values = $dictionary->values();
 
-assertType('iterable<int>', $values);
+assertType('Liamduckett\Structures\Sequence<int>', $values);

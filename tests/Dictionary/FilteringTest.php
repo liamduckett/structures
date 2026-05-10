@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,13 +13,17 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class FilteringTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     // filter ---
 
     public function testFilterByValue(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2, 'baz' => 3]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 3,
+        ]);
 
         $filtered = $dictionary->filter(fn (int $value) => $value > 1);
 
@@ -31,7 +35,11 @@ class FilteringTest extends TestCase
 
     public function testFilterByKey(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2, 'baz' => 3]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 3,
+        ]);
 
         $filtered = $dictionary->filter(fn (int $value, string $key) => 'foo' === $key);
 
@@ -42,7 +50,11 @@ class FilteringTest extends TestCase
 
     public function testFilterPreservesKeys(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2, 'baz' => 3]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 3,
+        ]);
 
         $filtered = $dictionary->filter(fn (int $value) => 2 !== $value);
 
@@ -54,7 +66,10 @@ class FilteringTest extends TestCase
 
     public function testFilterReturnsEmptyWhenNothingMatches(): void
     {
-        $dictionary = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $filtered = $dictionary->filter(fn (int $value) => $value > 99);
 
@@ -63,7 +78,10 @@ class FilteringTest extends TestCase
 
     public function testFilterIsImmutable(): void
     {
-        $original = Dictionary::make(['foo' => 1, 'bar' => 2]);
+        $original = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $filtered = $original->filter(fn (int $value) => $value > 1);
 
@@ -79,28 +97,38 @@ class FilteringTest extends TestCase
 
     public function testSearchReturnsAllMatchingKeys(): void
     {
-        $dictionary = Dictionary::make()->merge(['foo' => 1, 'bar' => 2, 'baz' => 1]);
+        $dictionary = Dictionary::make()->merge([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 1,
+        ]);
 
         $keys = $dictionary->search(1);
 
-        $this->assertSame(['foo', 'baz'], $keys);
+        $this->assertSequence($keys, ['foo', 'baz']);
     }
 
     public function testSearchReturnsEmptyWhenValueNotFound(): void
     {
-        $dictionary = Dictionary::make()->merge(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make()->merge([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $keys = $dictionary->search(99);
 
-        $this->assertSame([], $keys);
+        $this->assertSequence($keys, []);
     }
 
     public function testSearchUsesStrictComparison(): void
     {
-        $dictionary = Dictionary::make()->merge(['foo' => 1, 'bar' => 2]);
+        $dictionary = Dictionary::make()->merge([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
 
         $keys = $dictionary->search('1');
 
-        $this->assertSame([], $keys);
+        $this->assertSequence($keys, []);
     }
 }

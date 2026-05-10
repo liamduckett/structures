@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,7 +13,7 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class AddingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     // Set ---
 
@@ -21,8 +21,7 @@ class AddingTest extends TestCase
     {
         $dictionary = Dictionary::make()
             ->set('foo', 1)
-            ->set('bar', 2)
-        ;
+            ->set('bar', 2);
 
         $this->assertDictionary($dictionary, [
             'foo' => 1,
@@ -34,8 +33,7 @@ class AddingTest extends TestCase
     {
         $dictionary = Dictionary::make()
             ->set('foo', 1)
-            ->set('foo', 99)
-        ;
+            ->set('foo', 99);
 
         $this->assertDictionary($dictionary, [
             'foo' => 99,
@@ -61,8 +59,7 @@ class AddingTest extends TestCase
     {
         $dictionary = Dictionary::make()
             ->set('foo', 1)
-            ->merge(['bar' => 2])
-        ;
+            ->merge(['bar' => 2]);
 
         $this->assertDictionary($dictionary, [
             'foo' => 1,
@@ -74,8 +71,7 @@ class AddingTest extends TestCase
     {
         $dictionary = Dictionary::make()
             ->set('foo', 1)
-            ->merge(['foo' => 99])
-        ;
+            ->merge(['foo' => 99]);
 
         $this->assertDictionary($dictionary, [
             'foo' => 99,
@@ -86,8 +82,7 @@ class AddingTest extends TestCase
     {
         $dictionary = Dictionary::make()
             ->set('foo', 1)
-            ->merge($this->buildTypedIterator(['bar' => 2]))
-        ;
+            ->merge($this->buildTypedIterator(['bar' => 2]));
 
         $this->assertDictionary($dictionary, [
             'foo' => 1,

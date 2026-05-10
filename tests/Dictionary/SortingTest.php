@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,13 +13,17 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class SortingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     // SortKeyAscending ---
 
     public function testSortKeyAscendingSortsKeysAlphabetically(): void
     {
-        $dictionary = Dictionary::make(['banana' => 2, 'apple' => 1, 'cherry' => 3]);
+        $dictionary = Dictionary::make([
+            'banana' => 2,
+            'apple' => 1,
+            'cherry' => 3,
+        ]);
 
         $sorted = $dictionary->sortKeyAscending();
 
@@ -32,7 +36,10 @@ class SortingTest extends TestCase
 
     public function testSortKeyAscendingIsImmutable(): void
     {
-        $original = Dictionary::make(['banana' => 2, 'apple' => 1]);
+        $original = Dictionary::make([
+            'banana' => 2,
+            'apple' => 1,
+        ]);
 
         $sorted = $original->sortKeyAscending();
 

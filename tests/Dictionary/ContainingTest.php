@@ -4,7 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
-use Tests\Dictionary\Concerns\TestsDictionaries;
+use Tests\Concerns\TestsStructures;
 
 /**
  * @internal
@@ -13,7 +13,7 @@ use Tests\Dictionary\Concerns\TestsDictionaries;
  */
 class ContainingTest extends TestCase
 {
-    use TestsDictionaries;
+    use TestsStructures;
 
     // ContainsKey ---
 
