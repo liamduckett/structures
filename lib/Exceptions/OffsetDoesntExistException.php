@@ -2,9 +2,7 @@
 
 namespace Liamduckett\Structures\Exceptions;
 
-use Exception;
-
-class OffsetDoesntExistException extends Exception
+class OffsetDoesntExistException extends RuntimeException
 {
     public function __construct(string $offset)
     {

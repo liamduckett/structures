@@ -1,0 +1,19 @@
+<?php
+
+use Liamduckett\Structures\Dictionary;
+
+use function PHPStan\Testing\assertType;
+
+$dictionary = Dictionary::make(['foo' => 1]);
+
+// Filter ---
+
+$filtered = $dictionary->filter(fn (int $value) => $value > 0);
+
+assertType('Liamduckett\Structures\Dictionary<int>', $filtered);
+
+// Search ---
+
+$keys = $dictionary->search(1);
+
+assertType('iterable<non-empty-string>', $keys);

@@ -2,24 +2,24 @@
 
 namespace Liamduckett\Structures;
 
-use ArrayAccess;
-use ArrayIterator;
 use IteratorAggregate;
-use Liamduckett\Structures\Concerns\HasArrayAccess;
+use Liamduckett\Structures\Concerns\BuildsTypedIterator;
+use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
+use Traversable;
 
 /**
  * @template T of mixed
  *
- * @implements ArrayAccess<non-empty-string, T>
+ * @readonly
+ *
  * @implements IteratorAggregate<non-empty-string, T>
  */
-final class Dictionary implements ArrayAccess, IteratorAggregate
+final class Dictionary implements IteratorAggregate
 {
-    /** @use HasArrayAccess<non-empty-string, T> */
-    use HasArrayAccess;
+    use BuildsTypedIterator;
 
     /** @var array<non-empty-string, T> */
-    protected array $items = [];
+    private array $items;
 
     // Creation ---
 
@@ -32,14 +32,30 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
     }
 
     /**
-     * @param iterable<non-empty-string, T> $items
+     * @template TMake of mixed
+     *
+     * @param iterable<non-empty-string, TMake> $items
+     *
+     * @return (TMake is never ? self<mixed> : self<TMake>)
      */
-    public static function make(iterable $items = []): static
+    public static function make(iterable $items = []): self
     {
         return new self($items);
     }
 
-    // Additions ---
+    // Adding ---
+
+    /**
+     * @param non-empty-string $key
+     * @param T                $value
+     */
+    public function set(mixed $key, mixed $value): static
+    {
+        $items = $this->array();
+        $items[$key] = $value;
+
+        return new self($items);
+    }
 
     /**
      * @param iterable<non-empty-string, T> $items
@@ -48,37 +64,43 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
     {
         $results = [];
 
-        foreach ($items as $key => $item) {
+        foreach ($this->items as $key => $item) {
             $results[$key] = $item;
         }
 
-        foreach ($this->items as $key => $item) {
+        foreach ($items as $key => $item) {
             $results[$key] = $item;
         }
 
         return new self($results);
     }
 
-    // Conversions ---
+    // Removing ---
 
-    /**
-     * @return iterable<non-empty-string, T>
-     */
-    public function all(): iterable
+    public function remove(string $key): static
     {
-        return $this->items;
+        $items = $this->array();
+        unset($items[$key]);
+
+        return new self($items);
     }
 
-    public function getIterator(): iterable
-    {
-        /**
-         * https://github.com/phpstan/phpstan/issues/10289.
-         *
-         * @var ArrayIterator<non-empty-string, T> $iterator
-         */
-        $iterator = new ArrayIterator($this->items);
+    // Retrieving ---
 
-        return $iterator;
+    /**
+     * @param non-empty-string $key
+     *
+     * @return T
+     *
+     * @throws OffsetDoesntExistException
+     */
+    public function get(string $key): mixed
+    {
+        if (!array_key_exists($key, $this->items)) {
+            throw new OffsetDoesntExistException($key);
+        }
+
+        return $this->items[$key];
     }
 
     /**
@@ -86,13 +108,15 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
      */
     public function keys(): iterable
     {
-        $results = [];
+        return array_keys($this->items);
+    }
 
-        foreach ($this->items as $key => $_) {
-            $results[] = $key;
-        }
-
-        return $results;
+    /**
+     * @return iterable<non-empty-string, T>
+     */
+    public function items(): iterable
+    {
+        return $this->items;
     }
 
     /**
@@ -100,13 +124,30 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
      */
     public function values(): iterable
     {
-        $results = [];
+        return array_values($this->items);
+    }
 
-        foreach ($this->items as $item) {
-            $results[] = $item;
-        }
+    // Converting ---
 
-        return $results;
+    /**
+     * @return array<non-empty-string, T>
+     */
+    public function array(): array
+    {
+        return $this->items;
+    }
+
+    public function getIterator(): Traversable
+    {
+        return $this->buildTypedIterator($this->items);
+    }
+
+    /**
+     * @return Traversable<non-empty-string, T>
+     */
+    public function iterator(): Traversable
+    {
+        return $this->getIterator();
     }
 
     // Filtering ---
@@ -116,13 +157,11 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
      */
     public function filter(callable $callable): static
     {
-        $results = [];
-
-        foreach ($this as $key => $item) {
-            if ($callable($item, $key)) {
-                $results[$key] = $item;
-            }
-        }
+        $results = array_filter(
+            $this->items,
+            $callable,
+            ARRAY_FILTER_USE_BOTH,
+        );
 
         return new self($results);
     }
@@ -165,14 +204,14 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
         return new self($results);
     }
 
-    // Presence ---
+    // Containing ---
 
     /**
      * @param non-empty-string $key
      */
     public function containsKey(string $key): bool
     {
-        return $this->offsetExists($key);
+        return array_key_exists($key, $this->items);
     }
 
     /**
@@ -180,13 +219,7 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
      */
     public function containsValue(mixed $value): bool
     {
-        foreach ($this->items as $item) {
-            if ($item === $value) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array($value, $this->items, true);
     }
 
     /**
@@ -207,11 +240,7 @@ final class Dictionary implements ArrayAccess, IteratorAggregate
 
     public function isEmpty(): bool
     {
-        foreach ($this->items as $_) {
-            return false;
-        }
-
-        return true;
+        return [] === $this->items;
     }
 
     public function isNotEmpty(): bool

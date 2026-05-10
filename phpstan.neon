@@ -33,7 +33,7 @@ parameters:
             tooWideThrowType: true
 
         uncheckedExceptionClasses:
-            - Error
+            - Liamduckett\Structures\Exceptions\RuntimeException
             - PHPUnit\Framework\ExpectationFailedException
 
     paths:
