@@ -187,9 +187,9 @@ final class Sequence implements Countable, IteratorAggregate
     // Filtering ---
 
     /**
-     * @param Closure(T, int): bool $callable
+     * @param callable(T, int): bool $callable
      */
-    public function filter(Closure $callable): static
+    public function filter(callable $callable): static
     {
         return new self(function () use ($callable): Generator {
             $i = 0;
@@ -207,11 +207,11 @@ final class Sequence implements Countable, IteratorAggregate
     /**
      * @template TMap
      *
-     * @param Closure(T, int): TMap $callable
+     * @param callable(T, int): TMap $callable
      *
      * @return self<TMap>
      */
-    public function map(Closure $callable): self
+    public function map(callable $callable): self
     {
         return new self(function () use ($callable): Generator {
             yield from iterable_map($this->iterator(), $callable);
