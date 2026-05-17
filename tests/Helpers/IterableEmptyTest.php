@@ -36,7 +36,7 @@ class IterableEmptyTest extends TestCase
 
     public function testEmptyReturnsFalseForNonEmptyGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 1;
         })();
 

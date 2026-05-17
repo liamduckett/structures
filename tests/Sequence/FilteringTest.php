@@ -21,7 +21,7 @@ class FilteringTest extends TestCase
     {
         $sequence = Sequence::make([1, 2, 3, 4]);
 
-        $filtered = $sequence->filter(fn (int $value) => $value > 2);
+        $filtered = $sequence->filter(static fn (int $value) => $value > 2);
 
         $this->assertSequence($filtered, [3, 4]);
     }
@@ -30,7 +30,7 @@ class FilteringTest extends TestCase
     {
         $sequence = Sequence::make([10, 20, 30, 40]);
 
-        $filtered = $sequence->filter(fn (int $value, int $index) => 0 === $index % 2);
+        $filtered = $sequence->filter(static fn (int $value, int $index) => 0 === $index % 2);
 
         $this->assertSequence($filtered, [10, 30]);
     }
@@ -39,7 +39,7 @@ class FilteringTest extends TestCase
     {
         $sequence = Sequence::make([1, 2, 3]);
 
-        $filtered = $sequence->filter(fn (int $value) => $value > 1);
+        $filtered = $sequence->filter(static fn (int $value) => $value > 1);
 
         $this->assertSame(2, $filtered->get(0));
     }
@@ -48,7 +48,7 @@ class FilteringTest extends TestCase
     {
         $sequence = Sequence::make([1, 2, 3]);
 
-        $filtered = $sequence->filter(fn (int $value) => $value > 99);
+        $filtered = $sequence->filter(static fn (int $value) => $value > 99);
 
         $this->assertSequence($filtered, []);
     }
@@ -57,7 +57,7 @@ class FilteringTest extends TestCase
     {
         $original = Sequence::make([1, 2, 3]);
 
-        $filtered = $original->filter(fn (int $value) => $value > 1);
+        $filtered = $original->filter(static fn (int $value) => $value > 1);
 
         $this->assertNotSame($original, $filtered);
 
@@ -68,7 +68,7 @@ class FilteringTest extends TestCase
     {
         $calls = 0;
 
-        Sequence::make([1, 2, 3])->filter(function (int $value) use (&$calls): bool {
+        Sequence::make([1, 2, 3])->filter(static function (int $value) use (&$calls): bool {
             ++$calls;
 
             return $value > 1;

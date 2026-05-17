@@ -32,7 +32,7 @@ class CreatingTest extends TestCase
 
     public function testMakeWithAGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 1;
 
             yield 2;

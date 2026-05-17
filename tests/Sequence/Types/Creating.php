@@ -14,7 +14,7 @@ assertType('Liamduckett\Structures\Sequence<int>', $typed);
 
 // Constructor ---
 
-$fromClosure = new Sequence(function (): Generator {
+$fromClosure = new Sequence(static function (): Generator {
     yield 'hello';
 
     yield 'world';

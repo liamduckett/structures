@@ -31,7 +31,7 @@ class IterableCountTest extends TestCase
 
     public function testCountOfAGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 1;
 
             yield 2;

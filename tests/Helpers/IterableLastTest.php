@@ -34,7 +34,7 @@ class IterableLastTest extends TestCase
 
     public function testLastFromGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 10;
 
             yield 20;

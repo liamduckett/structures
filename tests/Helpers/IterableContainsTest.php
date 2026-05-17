@@ -31,7 +31,7 @@ class IterableContainsTest extends TestCase
 
     public function testContainsAnItemInAGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 1;
 
             yield 2;

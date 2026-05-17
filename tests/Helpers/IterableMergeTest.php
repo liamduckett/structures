@@ -37,7 +37,7 @@ class IterableMergeTest extends TestCase
 
     public function testMergeWithGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 3;
 
             yield 4;

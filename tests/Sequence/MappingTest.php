@@ -21,7 +21,7 @@ class MappingTest extends TestCase
     {
         $sequence = Sequence::make([1, 2, 3]);
 
-        $mapped = $sequence->map(fn (int $value) => $value * 2);
+        $mapped = $sequence->map(static fn (int $value) => $value * 2);
 
         $this->assertSequence($mapped, [2, 4, 6]);
     }
@@ -30,7 +30,7 @@ class MappingTest extends TestCase
     {
         $sequence = Sequence::make([10, 20, 30]);
 
-        $mapped = $sequence->map(fn (int $value, int $index) => $index);
+        $mapped = $sequence->map(static fn (int $value, int $index) => $index);
 
         $this->assertSequence($mapped, [0, 1, 2]);
     }
@@ -39,7 +39,7 @@ class MappingTest extends TestCase
     {
         $sequence = Sequence::make([3, 1, 2]);
 
-        $mapped = $sequence->map(fn (int $value) => $value * 10);
+        $mapped = $sequence->map(static fn (int $value) => $value * 10);
 
         $this->assertSequence($mapped, [30, 10, 20]);
     }
@@ -48,7 +48,7 @@ class MappingTest extends TestCase
     {
         $original = Sequence::make([1, 2, 3]);
 
-        $mapped = $original->map(fn (int $value) => $value * 2);
+        $mapped = $original->map(static fn (int $value) => $value * 2);
 
         $this->assertNotSame($original, $mapped);
 
@@ -59,7 +59,7 @@ class MappingTest extends TestCase
     {
         $calls = 0;
 
-        Sequence::make([1, 2, 3])->map(function (int $value) use (&$calls): int {
+        Sequence::make([1, 2, 3])->map(static function (int $value) use (&$calls): int {
             ++$calls;
 
             return $value * 2;

@@ -29,14 +29,14 @@ class ValueTest extends TestCase
         /** @var list<int> $array */
         $array = [1, 2, 3];
 
-        $result = value(fn () => $array);
+        $result = value(static fn () => $array);
 
         $this->assertSame([1, 2, 3], $result);
     }
 
     public function testValueAcceptsAGenerator(): void
     {
-        $result = value((function () {
+        $result = value((static function () {
             yield 1;
 
             yield 2;
@@ -47,7 +47,7 @@ class ValueTest extends TestCase
 
     public function testValueAcceptsAGeneratorFunction(): void
     {
-        $result = value(function () {
+        $result = value(static function () {
             yield 1;
 
             yield 2;

@@ -8,7 +8,7 @@ $dictionary = Dictionary::make(['foo' => 1]);
 
 // Filter ---
 
-$filtered = $dictionary->filter(fn (int $value) => $value > 0);
+$filtered = $dictionary->filter(static fn (int $value) => $value > 0);
 
 assertType('Liamduckett\Structures\Dictionary<int>', $filtered);
 

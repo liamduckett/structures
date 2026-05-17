@@ -30,7 +30,7 @@ class IterableToArrayTest extends TestCase
 
     public function testConvertsAGenerator(): void
     {
-        $result = iterable_to_array((function () {
+        $result = iterable_to_array((static function () {
             yield 'a' => 1;
 
             yield 'b' => 2;

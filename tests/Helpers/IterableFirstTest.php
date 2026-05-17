@@ -34,7 +34,7 @@ class IterableFirstTest extends TestCase
 
     public function testFirstFromGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 10;
 
             yield 20;

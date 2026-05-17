@@ -25,7 +25,7 @@ class FilteringTest extends TestCase
             'baz' => 3,
         ]);
 
-        $filtered = $dictionary->filter(fn (int $value) => $value > 1);
+        $filtered = $dictionary->filter(static fn (int $value) => $value > 1);
 
         $this->assertDictionary($filtered, [
             'bar' => 2,
@@ -41,7 +41,7 @@ class FilteringTest extends TestCase
             'baz' => 3,
         ]);
 
-        $filtered = $dictionary->filter(fn (int $value, string $key) => 'foo' === $key);
+        $filtered = $dictionary->filter(static fn (int $value, string $key) => 'foo' === $key);
 
         $this->assertDictionary($filtered, [
             'foo' => 1,
@@ -56,7 +56,7 @@ class FilteringTest extends TestCase
             'baz' => 3,
         ]);
 
-        $filtered = $dictionary->filter(fn (int $value) => 2 !== $value);
+        $filtered = $dictionary->filter(static fn (int $value) => 2 !== $value);
 
         $this->assertDictionary($filtered, [
             'foo' => 1,
@@ -71,7 +71,7 @@ class FilteringTest extends TestCase
             'bar' => 2,
         ]);
 
-        $filtered = $dictionary->filter(fn (int $value) => $value > 99);
+        $filtered = $dictionary->filter(static fn (int $value) => $value > 99);
 
         $this->assertDictionary($filtered, []);
     }
@@ -83,7 +83,7 @@ class FilteringTest extends TestCase
             'bar' => 2,
         ]);
 
-        $filtered = $original->filter(fn (int $value) => $value > 1);
+        $filtered = $original->filter(static fn (int $value) => $value > 1);
 
         $this->assertNotSame($original, $filtered);
 

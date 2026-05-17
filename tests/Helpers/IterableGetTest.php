@@ -37,7 +37,7 @@ class IterableGetTest extends TestCase
 
     public function testGetFromGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 10;
 
             yield 20;

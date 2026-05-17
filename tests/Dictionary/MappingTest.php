@@ -24,7 +24,7 @@ class MappingTest extends TestCase
             'bar' => 2,
         ]);
 
-        $mapped = $dictionary->map(fn (int $value) => $value * 2);
+        $mapped = $dictionary->map(static fn (int $value) => $value * 2);
 
         $this->assertDictionary($mapped, [
             'foo' => 2,
@@ -39,7 +39,7 @@ class MappingTest extends TestCase
             'bar' => 2,
         ]);
 
-        $mapped = $dictionary->map(fn (int $value, string $key) => $key);
+        $mapped = $dictionary->map(static fn (int $value, string $key) => $key);
 
         $this->assertDictionary($mapped, [
             'foo' => 'foo',
@@ -54,7 +54,7 @@ class MappingTest extends TestCase
             'bar' => 2,
         ]);
 
-        $mapped = $dictionary->map(fn (int $value) => $value * 10);
+        $mapped = $dictionary->map(static fn (int $value) => $value * 10);
         $keys = $mapped->keys();
 
         $this->assertSequence($keys, ['foo', 'bar']);
@@ -67,7 +67,7 @@ class MappingTest extends TestCase
             'bar' => 2,
         ]);
 
-        $mapped = $original->map(fn (int $value) => $value * 2);
+        $mapped = $original->map(static fn (int $value) => $value * 2);
 
         $this->assertNotSame($original, $mapped);
 

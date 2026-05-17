@@ -43,7 +43,7 @@ class CreatingTest extends TestCase
 
     public function testMakeWithAGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 'foo' => 1;
 
             yield 'bar' => 2;

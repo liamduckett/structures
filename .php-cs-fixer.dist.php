@@ -6,8 +6,9 @@ use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
 return (new Config())
-    ->setRiskyAllowed(false)
+    ->setRiskyAllowed(true)
     ->setRules([
+        'static_lambda' => true,
         '@auto' => true,
         '@PhpCsFixer' => true,
         'global_namespace_import' => [

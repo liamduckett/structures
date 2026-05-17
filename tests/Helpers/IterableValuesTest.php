@@ -37,7 +37,7 @@ class IterableValuesTest extends TestCase
 
     public function testValuesOfAGenerator(): void
     {
-        $generator = (function () {
+        $generator = (static function () {
             yield 'x' => 1;
 
             yield 'y' => 2;
