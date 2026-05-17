@@ -6,7 +6,10 @@
     "autoload": {
         "psr-4": {
             "Liamduckett\\Structures\\": "lib/"
-        }
+        },
+        "files": [
+            "lib/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
