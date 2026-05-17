@@ -63,4 +63,17 @@ class FilteringTest extends TestCase
 
         $this->assertSequence($original, [1, 2, 3]);
     }
+
+    public function testFilterIsLazy(): void
+    {
+        $calls = 0;
+
+        Sequence::make([1, 2, 3])->filter(function (int $value) use (&$calls): bool {
+            ++$calls;
+
+            return $value > 1;
+        });
+
+        $this->assertSame(0, $calls);
+    }
 }

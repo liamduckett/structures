@@ -2,8 +2,9 @@
 
 namespace Liamduckett\Structures;
 
-use ArrayIterator;
+use Closure;
 use Countable;
+use Generator;
 use IteratorAggregate;
 use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 use Traversable;
@@ -17,23 +18,23 @@ use Traversable;
  */
 final class Sequence implements Countable, IteratorAggregate
 {
-    /** @var list<T> */
-    private array $items;
+    /** @var Closure(): Generator<int, T, mixed, void> */
+    private Closure $factory;
 
     // Creation ---
 
     /**
-     * @param iterable<T> $items
+     * @param (Closure(): Generator<int, T, mixed, void>)|iterable<T> $items
      */
-    public function __construct(iterable $items = [])
+    public function __construct(Closure|iterable $items = [])
     {
-        $results = [];
-
-        foreach ($items as $item) {
-            $results[] = $item;
-        }
-
-        $this->items = $results;
+        $this->factory = $items instanceof Closure
+            ? $items
+            : static function () use ($items): Generator {
+                foreach ($items as $item) {
+                    yield $item;
+                }
+            };
     }
 
     /**
@@ -55,10 +56,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function push(mixed $value): static
     {
-        $items = $this->array();
-        $items[] = $value;
-
-        return new self($items);
+        return $this->merge([$value]);
     }
 
     /**
@@ -66,10 +64,9 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function prepend(mixed $value): static
     {
-        $items = $this->array();
-        array_unshift($items, $value);
+        $self = new self([$value]);
 
-        return new self($items);
+        return $self->merge($this);
     }
 
     /**
@@ -77,31 +74,54 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function merge(iterable $items): static
     {
-        $results = $this->items;
+        return new self(function () use ($items): Generator {
+            foreach ($this->iterator() as $item) {
+                yield $item;
+            }
 
-        foreach ($items as $item) {
-            $results[] = $item;
-        }
-
-        return new self($results);
+            foreach ($items as $item) {
+                yield $item;
+            }
+        });
     }
 
     // Removing ---
 
     public function pop(): static
     {
-        $items = $this->array();
-        array_pop($items);
+        return new self(function (): Generator {
+            $prev = null;
+            $first = true;
 
-        return new self($items);
+            foreach ($this->iterator() as $item) {
+                if ($first) {
+                    $first = false;
+                    $prev = $item;
+
+                    continue;
+                }
+
+                yield $prev;
+                $prev = $item;
+            }
+        });
     }
 
     public function shift(): static
     {
-        $items = $this->array();
-        array_shift($items);
+        return new self(function (): Generator {
+            $first = true;
 
-        return new self($items);
+            foreach ($this->iterator() as $item) {
+                if ($first) {
+                    $first = false;
+
+                    continue;
+                }
+
+                yield $item;
+            }
+        });
     }
 
     // Retrieving ---
@@ -113,11 +133,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function get(int $index): mixed
     {
-        if (!array_key_exists($index, $this->items)) {
-            throw new OffsetDoesntExistException((string) $index);
-        }
-
-        return $this->items[$index];
+        return iterable_get($this->iterator(), $index);
     }
 
     /**
@@ -127,7 +143,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function first(): mixed
     {
-        return $this->get(0);
+        return iterable_first($this->iterator());
     }
 
     /**
@@ -137,12 +153,12 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function last(): mixed
     {
-        return $this->get($this->count() - 1);
+        return iterable_last($this->iterator());
     }
 
     public function count(): int
     {
-        return count($this->items);
+        return iterable_count($this->iterator());
     }
 
     // Converting ---
@@ -152,12 +168,12 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function array(): array
     {
-        return $this->items;
+        return iterator_to_array($this->iterator(), false);
     }
 
     public function getIterator(): Traversable
     {
-        return new ArrayIterator($this->items);
+        return ($this->factory)();
     }
 
     /**
@@ -171,17 +187,19 @@ final class Sequence implements Countable, IteratorAggregate
     // Filtering ---
 
     /**
-     * @param (callable(T, int): bool) $callable
+     * @param Closure(T, int): bool $callable
      */
-    public function filter(callable $callable): static
+    public function filter(Closure $callable): static
     {
-        $results = array_values(array_filter(
-            $this->items,
-            $callable,
-            ARRAY_FILTER_USE_BOTH,
-        ));
+        return new self(function () use ($callable): Generator {
+            $i = 0;
 
-        return new self($results);
+            foreach ($this->iterator() as $index => $item) {
+                if (true === $callable($item, $index)) {
+                    yield $i++ => $item;
+                }
+            }
+        });
     }
 
     // Mapping ---
@@ -189,19 +207,15 @@ final class Sequence implements Countable, IteratorAggregate
     /**
      * @template TMap
      *
-     * @param (callable(T, int): TMap) $callable
+     * @param Closure(T, int): TMap $callable
      *
      * @return self<TMap>
      */
-    public function map(callable $callable): self
+    public function map(Closure $callable): self
     {
-        $results = [];
-
-        foreach ($this as $index => $item) {
-            $results[] = $callable($item, $index);
-        }
-
-        return new self($results);
+        return new self(function () use ($callable): Generator {
+            yield from iterable_map($this->iterator(), $callable);
+        });
     }
 
     // Containing ---
@@ -211,7 +225,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function contains(mixed $value): bool
     {
-        return in_array($value, $this->items, true);
+        return iterable_contains($this->iterator(), $value);
     }
 
     /**
@@ -224,29 +238,11 @@ final class Sequence implements Countable, IteratorAggregate
 
     public function isEmpty(): bool
     {
-        return [] === $this->items;
+        return iterable_empty($this->iterator());
     }
 
     public function isNotEmpty(): bool
     {
         return !$this->isEmpty();
-    }
-
-    // Sorting ---
-
-    public function sortAscending(): static
-    {
-        $copy = $this->items;
-        sort($copy);
-
-        return new self($copy);
-    }
-
-    public function sortDescending(): static
-    {
-        $copy = $this->items;
-        rsort($copy);
-
-        return new self($copy);
     }
 }

@@ -54,4 +54,17 @@ class MappingTest extends TestCase
 
         $this->assertSequence($original, [1, 2, 3]);
     }
+
+    public function testMapIsLazy(): void
+    {
+        $calls = 0;
+
+        Sequence::make([1, 2, 3])->map(function (int $value) use (&$calls): int {
+            ++$calls;
+
+            return $value * 2;
+        });
+
+        $this->assertSame(0, $calls);
+    }
 }

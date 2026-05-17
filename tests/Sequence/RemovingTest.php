@@ -24,6 +24,11 @@ class RemovingTest extends TestCase
         $this->assertSequence($sequence, [1, 2]);
     }
 
+    public function testPopOnASingleItemSequenceReturnsEmpty(): void
+    {
+        $this->assertSequence(Sequence::make([1])->pop(), []);
+    }
+
     public function testPopOnAnEmptySequenceIsANoop(): void
     {
         $this->assertSequence(Sequence::make()->pop(), []);
@@ -47,6 +52,11 @@ class RemovingTest extends TestCase
         $sequence = Sequence::make([1, 2, 3])->shift();
 
         $this->assertSequence($sequence, [2, 3]);
+    }
+
+    public function testShiftOnASingleItemSequenceReturnsEmpty(): void
+    {
+        $this->assertSequence(Sequence::make([1])->shift(), []);
     }
 
     public function testShiftOnAnEmptySequenceIsANoop(): void
