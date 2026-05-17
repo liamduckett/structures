@@ -192,11 +192,9 @@ final class Sequence implements Countable, IteratorAggregate
     public function filter(callable $callable): static
     {
         return new self(function () use ($callable): Generator {
-            $i = 0;
-
             foreach ($this->iterator() as $index => $item) {
                 if (true === $callable($item, $index)) {
-                    yield $i++ => $item;
+                    yield $item;
                 }
             }
         });
