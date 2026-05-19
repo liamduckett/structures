@@ -209,3 +209,59 @@ function iterable_merge(iterable ...$iterables): Generator
         }
     }
 }
+
+/**
+ * @template TKey of array-key
+ * @template T
+ *
+ * @param iterable<TKey, T> $iterable
+ *
+ * @return Generator<TKey, T, mixed, void>
+ */
+function generator(iterable $iterable): Generator
+{
+    foreach ($iterable as $key => $value) {
+        yield $key => $value;
+    }
+}
+
+/**
+ * @template TKey of array-key
+ * @template T
+ *
+ * @param iterable<TKey, T> $iterable
+ * @param positive-int      $size
+ *
+ * @return Generator<int, Generator<TKey, T, mixed, void>, mixed, void>
+ */
+function iterable_chunk(iterable $iterable, int $size): Generator
+{
+    $generator = generator($iterable);
+
+    $remaining = 0;
+
+    while ($generator->valid()) {
+        while ($remaining > 0 && $generator->valid()) {
+            $generator->next();
+            --$remaining;
+        }
+
+        if (!$generator->valid()) {
+            break;
+        }
+
+        $remaining = $size;
+
+        yield (static function () use ($generator, &$remaining) {
+            while ($generator->valid() && $remaining > 0) {
+                $key = $generator->key();
+                $value = $generator->current();
+
+                --$remaining;
+                $generator->next();
+
+                yield $key => $value;
+            }
+        })();
+    }
+}
