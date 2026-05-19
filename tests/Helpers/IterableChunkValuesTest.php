@@ -1,21 +1,21 @@
 <?php
 
-namespace Tests\Helpers;
+namespace Helpers;
 
 use PHPUnit\Framework\TestCase;
 
-use function Liamduckett\Structures\iterable_chunk;
+use function Liamduckett\Structures\iterable_chunk_values;
 
 /**
  * @internal
  *
  * @coversNothing
  */
-class IterableChunkTest extends TestCase
+class IterableChunkValuesTest extends TestCase
 {
     public function testExhaustiveYielding(): void
     {
-        $chunks = iterable_chunk([1, 2, 3, 4, 5], 2);
+        $chunks = iterable_chunk_values([1, 2, 3, 4, 5], 2);
 
         $result = [];
 
@@ -23,12 +23,12 @@ class IterableChunkTest extends TestCase
             $result[] = iterator_to_array($chunk);
         }
 
-        $this->assertSame([[0 => 1, 1 => 2], [2 => 3, 3 => 4], [4 => 5]], $result);
+        $this->assertSame([[0 => 1, 1 => 2], [0 => 3, 1 => 4], [0 => 5]], $result);
     }
 
     public function testPartialYielding(): void
     {
-        $chunks = iterable_chunk([1, 2, 3, 4, 5], 2);
+        $chunks = iterable_chunk_values([1, 2, 3, 4, 5], 2);
 
         $result = [];
 
@@ -45,7 +45,7 @@ class IterableChunkTest extends TestCase
 
     public function testNoYielding(): void
     {
-        $chunks = iterable_chunk([1, 2, 3, 4, 5], 2);
+        $chunks = iterable_chunk_values([1, 2, 3, 4, 5], 2);
 
         $count = 0;
 
@@ -70,7 +70,7 @@ class IterableChunkTest extends TestCase
             yield 5;
         })();
 
-        $chunks = iterable_chunk($generator, 2);
+        $chunks = iterable_chunk_values($generator, 2);
 
         $result = [];
 
@@ -78,12 +78,12 @@ class IterableChunkTest extends TestCase
             $result[] = iterator_to_array($chunk);
         }
 
-        $this->assertSame([[0 => 1, 1 => 2], [2 => 3, 3 => 4], [4 => 5]], $result);
+        $this->assertSame([[0 => 1, 1 => 2], [0 => 3, 1 => 4], [0 => 5]], $result);
     }
 
-    public function testKeysArePreserved(): void
+    public function testKeysAreNotPreserved(): void
     {
-        $chunks = iterable_chunk(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5], 2);
+        $chunks = iterable_chunk_values(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5], 2);
 
         $result = [];
 
@@ -91,6 +91,6 @@ class IterableChunkTest extends TestCase
             $result[] = iterator_to_array($chunk);
         }
 
-        $this->assertSame([['a' => 1, 'b' => 2], ['c' => 3, 'd' => 4], ['e' => 5]], $result);
+        $this->assertSame([[0 => 1, 1 => 2], [0 => 3, 1 => 4], [0 => 5]], $result);
     }
 }
