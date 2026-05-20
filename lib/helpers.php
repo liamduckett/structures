@@ -117,6 +117,8 @@ function iterable_contains(iterable $iterable, mixed $value): bool
 
 /**
  * @param iterable<mixed> $iterable
+ *
+ * @return ($iterable is non-empty-array ? false : ($iterable is array{} ? true : bool))
  */
 function iterable_empty(iterable $iterable): bool
 {

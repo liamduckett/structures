@@ -16,12 +16,12 @@ class IterableEmptyTest extends TestCase
 {
     public function testEmptyReturnsTrueForEmptyArray(): void
     {
-        $this->assertTrue(iterable_empty([]));
+        $this->assertTrue(iterable_empty([])); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     public function testEmptyReturnsFalseForNonEmptyArray(): void
     {
-        $this->assertFalse(iterable_empty([1, 2, 3]));
+        $this->assertFalse(iterable_empty([1, 2, 3])); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     public function testEmptyReturnsTrueForEmptyIterable(): void

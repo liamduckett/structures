@@ -3,10 +3,24 @@
 use function Liamduckett\Structures\iterable_empty;
 use function PHPStan\Testing\assertType;
 
-$result = iterable_empty([1, 2, 3]);
+assertType('false', iterable_empty([1, 2, 3]));
 
-assertType('bool', $result);
+assertType('true', iterable_empty([]));
 
-$result = iterable_empty([]);
+assertType('bool', iterable_empty(new ArrayIterator([1, 2, 3])));
 
-assertType('bool', $result);
+/** @var list<int> $list */
+$list = [];
+assertType('bool', iterable_empty($list));
+
+/** @var non-empty-list<int> $nonEmptyList */
+$nonEmptyList = [];
+assertType('false', iterable_empty($nonEmptyList));
+
+/** @var array<int> $array */
+$array = [];
+assertType('bool', iterable_empty($array));
+
+/** @var non-empty-array<int> $nonEmptyArray */
+$nonEmptyArray = [];
+assertType('false', iterable_empty($nonEmptyArray));
