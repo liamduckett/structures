@@ -87,39 +87,27 @@ final class Sequence implements Countable, IteratorAggregate
 
     // Removing ---
 
-    public function pop(): static
+    /**
+     * @param non-negative-int  $offset
+     * @param null|positive-int $length
+     */
+    public function slice(int $offset, ?int $length = null): static
     {
-        return new self(function (): Generator {
-            $prev = null;
-            $first = true;
+        return new self(function () use ($offset, $length): Generator {
+            $index = 0;
+            $extracted = 0;
 
             foreach ($this->iterator() as $item) {
-                if ($first) {
-                    $first = false;
-                    $prev = $item;
-
+                if ($index++ < $offset) {
                     continue;
                 }
 
-                yield $prev;
-                $prev = $item;
-            }
-        });
-    }
-
-    public function shift(): static
-    {
-        return new self(function (): Generator {
-            $first = true;
-
-            foreach ($this->iterator() as $item) {
-                if ($first) {
-                    $first = false;
-
-                    continue;
+                if (null !== $length && $extracted >= $length) {
+                    break;
                 }
 
                 yield $item;
+                ++$extracted;
             }
         });
     }

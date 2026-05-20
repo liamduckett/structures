@@ -6,14 +6,8 @@ use function PHPStan\Testing\assertType;
 
 $sequence = Sequence::make([1, 2, 3]);
 
-// Pop ---
+// Splice ---
 
-$popped = $sequence->pop();
+$sliced = $sequence->slice(0, 1);
 
-assertType('Liamduckett\Structures\Sequence<int>', $popped);
-
-// Shift ---
-
-$shifted = $sequence->shift();
-
-assertType('Liamduckett\Structures\Sequence<int>', $shifted);
+assertType('Liamduckett\Structures\Sequence<int>', $sliced);

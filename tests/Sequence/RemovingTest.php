@@ -15,70 +15,64 @@ class RemovingTest extends TestCase
 {
     use TestsStructures;
 
-    // Pop ---
+    // Slice ---
 
-    public function testPopRemovesTheLastItem(): void
+    public function testSliceExtractsItemsAtOffset(): void
     {
-        $sequence = Sequence::make([1, 2, 3])->pop();
+        $sequence = Sequence::make([1, 2, 3, 4, 5])->slice(1, 3);
 
-        $this->assertSequence($sequence, [1, 2]);
+        $this->assertSequence($sequence, [2, 3, 4]);
     }
 
-    public function testPopOnASingleItemSequenceReturnsEmpty(): void
+    public function testSliceWithNullLengthGoesToEnd(): void
     {
-        $this->assertSequence(Sequence::make([1])->pop(), []);
+        $sequence = Sequence::make([1, 2, 3, 4, 5])->slice(2);
+
+        $this->assertSequence($sequence, [3, 4, 5]);
     }
 
-    public function testPopOnAnEmptySequenceIsANoop(): void
+    public function testSliceASingleItem(): void
     {
-        $this->assertSequence(Sequence::make()->pop(), []);
+        $sequence = Sequence::make([1, 2, 3])->slice(1, 1);
+
+        $this->assertSequence($sequence, [2]);
     }
 
-    public function testPopIsImmutable(): void
+    public function testSliceReIndexes(): void
     {
-        $original = Sequence::make([1, 2, 3]);
-
-        $modified = $original->pop();
-
-        $this->assertNotSame($original, $modified);
-
-        $this->assertSequence($original, [1, 2, 3]);
-    }
-
-    // Shift ---
-
-    public function testShiftRemovesTheFirstItem(): void
-    {
-        $sequence = Sequence::make([1, 2, 3])->shift();
-
-        $this->assertSequence($sequence, [2, 3]);
-    }
-
-    public function testShiftOnASingleItemSequenceReturnsEmpty(): void
-    {
-        $this->assertSequence(Sequence::make([1])->shift(), []);
-    }
-
-    public function testShiftOnAnEmptySequenceIsANoop(): void
-    {
-        $this->assertSequence(Sequence::make()->shift(), []);
-    }
-
-    public function testShiftIsImmutable(): void
-    {
-        $original = Sequence::make([1, 2, 3]);
-
-        $modified = $original->shift();
-
-        $this->assertNotSame($original, $modified);
-
-        $this->assertSequence($original, [1, 2, 3]);
-    }
-
-    public function testShiftReIndexes(): void
-    {
-        $sequence = Sequence::make([1, 2, 3])->shift();
+        $sequence = Sequence::make([1, 2, 3])->slice(1, 2);
 
         $this->assertSame(2, $sequence->get(0));
+    }
+
+    public function testSliceOnAnEmptySequenceReturnsEmpty(): void
+    {
+        $this->assertSequence(Sequence::make()->slice(0), []);
+    }
+
+    public function testSliceIsImmutable(): void
+    {
+        $original = Sequence::make([1, 2, 3]);
+
+        $original->slice(0, 1);
+
+        $this->assertSequence($original, [1, 2, 3]);
+    }
+
+    public function testSliceIsLazy(): void
+    {
+        $calls = 0;
+
+        $sequence = new Sequence(static function () use (&$calls) {
+            foreach ([1, 2, 3] as $value) {
+                ++$calls;
+
+                yield $value;
+            }
+        });
+
+        $sequence->slice(0, 1);
+
+        $this->assertSame(0, $calls);
     }
 }
