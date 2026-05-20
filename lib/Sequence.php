@@ -216,6 +216,22 @@ final class Sequence implements Countable, IteratorAggregate
         });
     }
 
+    // Chunking ---
+
+    /**
+     * @param positive-int $size
+     *
+     * @return self<self<T>>
+     */
+    public function chunk(int $size): self
+    {
+        return new self(function () use ($size): Generator {
+            foreach (iterable_chunk_values($this->iterator(), $size) as $chunk) {
+                yield new self($chunk);
+            }
+        });
+    }
+
     // Containing ---
 
     /**

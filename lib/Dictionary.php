@@ -198,6 +198,20 @@ final class Dictionary implements IteratorAggregate
         return new self($results);
     }
 
+    // Chunking ---
+
+    /**
+     * @param positive-int $size
+     *
+     * @return Sequence<self<T>>
+     */
+    public function chunk(int $size): Sequence
+    {
+        $chunks = array_chunk($this->items, $size, true);
+
+        return new Sequence(array_map(static fn (array $chunk) => new self($chunk), $chunks));
+    }
+
     // Containing ---
 
     /**

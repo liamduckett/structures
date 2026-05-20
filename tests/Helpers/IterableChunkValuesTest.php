@@ -81,6 +81,32 @@ class IterableChunkValuesTest extends TestCase
         $this->assertSame([[0 => 1, 1 => 2], [0 => 3, 1 => 4], [0 => 5]], $result);
     }
 
+    public function testChunkWithSizeEqualToLength(): void
+    {
+        $chunks = iterable_chunk_values([1, 2, 3], 3);
+
+        $result = [];
+
+        foreach ($chunks as $chunk) {
+            $result[] = iterator_to_array($chunk);
+        }
+
+        $this->assertSame([[0 => 1, 1 => 2, 2 => 3]], $result);
+    }
+
+    public function testChunkWithSizeGreaterThanLength(): void
+    {
+        $chunks = iterable_chunk_values([1, 2], 10);
+
+        $result = [];
+
+        foreach ($chunks as $chunk) {
+            $result[] = iterator_to_array($chunk);
+        }
+
+        $this->assertSame([[0 => 1, 1 => 2]], $result);
+    }
+
     public function testKeysAreNotPreserved(): void
     {
         $chunks = iterable_chunk_values(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5], 2);
