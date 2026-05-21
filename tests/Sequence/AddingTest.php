@@ -18,18 +18,26 @@ class AddingTest extends TestCase
 
     // Push ---
 
-    public function testPushAppendsAnItem(): void
+    public function testPushAppendsItems(): void
     {
-        $sequence = Sequence::make([1, 2])->push(3);
+        $sequence = Sequence::make([1, 2])->push([3, 4]);
 
-        $this->assertSequence($sequence, [1, 2, 3]);
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
+    }
+
+    public function testPushAcceptsAnIterable(): void
+    {
+        $sequence = Sequence::make([1, 2])
+            ->push(new ArrayIterator([3, 4]));
+
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
     }
 
     public function testPushIsImmutable(): void
     {
         $original = Sequence::make([1, 2]);
 
-        $modified = $original->push(3);
+        $modified = $original->push([3]);
 
         $this->assertNotSame($original, $modified);
 
@@ -38,18 +46,26 @@ class AddingTest extends TestCase
 
     // Prepend ---
 
-    public function testPrependAddsItemToFront(): void
+    public function testPrependAddsItemsToFront(): void
     {
-        $sequence = Sequence::make([2, 3])->prepend(1);
+        $sequence = Sequence::make([3, 4])->prepend([1, 2]);
 
-        $this->assertSequence($sequence, [1, 2, 3]);
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
+    }
+
+    public function testPrependAcceptsAnIterable(): void
+    {
+        $sequence = Sequence::make([3, 4])
+            ->prepend(new ArrayIterator([1, 2]));
+
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
     }
 
     public function testPrependIsImmutable(): void
     {
         $original = Sequence::make([2, 3]);
 
-        $modified = $original->prepend(1);
+        $modified = $original->prepend([1]);
 
         $this->assertNotSame($original, $modified);
 

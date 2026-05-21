@@ -50,19 +50,19 @@ final class Sequence implements Countable, IteratorAggregate
     // Adding ---
 
     /**
-     * @param T $value
+     * @param iterable<T> $items
      */
-    public function push(mixed $value): static
+    public function push(iterable $items): static
     {
-        return $this->merge([$value]);
+        return $this->merge($items);
     }
 
     /**
-     * @param T $value
+     * @param iterable<T> $items
      */
-    public function prepend(mixed $value): static
+    public function prepend(iterable $items): static
     {
-        $self = new self([$value]);
+        $self = new self($items);
 
         return $self->merge($this);
     }

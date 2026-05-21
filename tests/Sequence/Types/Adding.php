@@ -8,13 +8,13 @@ $sequence = Sequence::make([1, 2, 3]);
 
 // Push ---
 
-$pushed = $sequence->push(4);
+$pushed = $sequence->push([4]);
 
 assertType('Liamduckett\Structures\Sequence<int>', $pushed);
 
 // Prepend ---
 
-$prepended = $sequence->prepend(0);
+$prepended = $sequence->prepend([0]);
 
 assertType('Liamduckett\Structures\Sequence<int>', $prepended);
 
