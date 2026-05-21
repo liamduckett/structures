@@ -6,7 +6,7 @@ use function PHPStan\Testing\assertType;
 
 $sequence = Sequence::make([1, 2, 3]);
 
-// Splice ---
+// Slice ---
 
 $sliced = $sequence->slice(0, 1);
 

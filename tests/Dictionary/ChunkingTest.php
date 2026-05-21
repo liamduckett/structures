@@ -79,4 +79,21 @@ class ChunkingTest extends TestCase
 
         $this->assertDictionary($original, ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]);
     }
+
+    public function testChunkIsLazy(): void
+    {
+        $calls = 0;
+
+        $dictionary = new Dictionary(static function () use (&$calls) {
+            foreach (['a' => 1, 'b' => 2] as $key => $value) {
+                ++$calls;
+
+                yield $key => $value;
+            }
+        });
+
+        $dictionary->chunk(1);
+
+        $this->assertSame(0, $calls);
+    }
 }

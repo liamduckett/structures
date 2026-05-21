@@ -48,6 +48,13 @@ class RetrievingTest extends TestCase
         Sequence::make()->first();
     }
 
+    public function testFirstWorksWithNullValues(): void
+    {
+        $first = Sequence::make([null, 1, 2])->first();
+
+        $this->assertNull($first);
+    }
+
     // Last ---
 
     public function testLastReturnsTheLastItem(): void
@@ -62,6 +69,13 @@ class RetrievingTest extends TestCase
         $this->expectException(OffsetDoesntExistException::class);
 
         Sequence::make()->last();
+    }
+
+    public function testLastWorksWithNullValues(): void
+    {
+        $last = Sequence::make([1, 2, null])->last();
+
+        $this->assertNull($last);
     }
 
     // Count ---

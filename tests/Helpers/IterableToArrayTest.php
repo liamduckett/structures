@@ -45,4 +45,20 @@ class IterableToArrayTest extends TestCase
 
         $this->assertSame(['a' => 1, 'b' => 2], $result);
     }
+
+    public function testConvertsAnEmptyArray(): void
+    {
+        $result = iterable_to_array([]);
+
+        $this->assertSame([], $result); // @phpstan-ignore method.alreadyNarrowedType
+    }
+
+    public function testConvertsAnEmptyGenerator(): void
+    {
+        $result = iterable_to_array((static function () {
+            yield from [];
+        })());
+
+        $this->assertSame([], $result); // @phpstan-ignore method.alreadyNarrowedType
+    }
 }

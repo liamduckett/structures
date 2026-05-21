@@ -93,6 +93,23 @@ class FilteringTest extends TestCase
         ]);
     }
 
+    public function testFilterIsLazy(): void
+    {
+        $calls = 0;
+
+        $dictionary = new Dictionary(static function () use (&$calls) {
+            foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
+                ++$calls;
+
+                yield $key => $value;
+            }
+        });
+
+        $dictionary->filter(static fn (int $value) => $value > 1);
+
+        $this->assertSame(0, $calls);
+    }
+
     // search ---
 
     public function testSearchReturnsAllMatchingKeys(): void

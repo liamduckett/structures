@@ -76,4 +76,21 @@ class MappingTest extends TestCase
             'bar' => 2,
         ]);
     }
+
+    public function testMapIsLazy(): void
+    {
+        $calls = 0;
+
+        $dictionary = new Dictionary(static function () use (&$calls) {
+            foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
+                ++$calls;
+
+                yield $key => $value;
+            }
+        });
+
+        $dictionary->map(static fn (int $value) => $value * 2);
+
+        $this->assertSame(0, $calls);
+    }
 }

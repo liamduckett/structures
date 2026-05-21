@@ -83,4 +83,21 @@ class AddingTest extends TestCase
 
         $this->assertSequence($original, [1, 2]);
     }
+
+    public function testMergeIsLazy(): void
+    {
+        $calls = 0;
+
+        $sequence = new Sequence(static function () use (&$calls) {
+            foreach ([1, 2] as $value) {
+                ++$calls;
+
+                yield $value;
+            }
+        });
+
+        $sequence->merge([3, 4]);
+
+        $this->assertSame(0, $calls);
+    }
 }

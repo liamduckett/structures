@@ -42,4 +42,13 @@ class IterableEmptyTest extends TestCase
 
         $this->assertFalse(iterable_empty($generator));
     }
+
+    public function testEmptyReturnsTrueForEmptyGenerator(): void
+    {
+        $generator = (static function () {
+            yield from [];
+        })();
+
+        $this->assertTrue(iterable_empty($generator));
+    }
 }

@@ -49,4 +49,11 @@ class IterableToGeneratorTest extends TestCase
 
         $this->assertSame(['a' => 1, 'b' => 2], iterator_to_array($result));
     }
+
+    public function testConvertsAnEmptyIterable(): void
+    {
+        $result = iterable_to_generator([]);
+
+        $this->assertSame([], iterator_to_array($result));
+    }
 }
