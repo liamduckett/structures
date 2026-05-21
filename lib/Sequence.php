@@ -31,9 +31,7 @@ final class Sequence implements Countable, IteratorAggregate
         $this->factory = $items instanceof Closure
             ? $items
             : static function () use ($items): Generator {
-                foreach ($items as $item) {
-                    yield $item;
-                }
+                yield from iterable_values($items);
             };
     }
 
@@ -74,15 +72,17 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function merge(iterable $items): static
     {
-        return new self(function () use ($items): Generator {
-            foreach ($this->iterator() as $item) {
-                yield $item;
-            }
+        return new self(
+            function () use ($items): Generator {
+                foreach ($this->iterator() as $item) {
+                    yield $item;
+                }
 
-            foreach ($items as $item) {
-                yield $item;
+                foreach ($items as $item) {
+                    yield $item;
+                }
             }
-        });
+        );
     }
 
     // Removing ---

@@ -19,11 +19,10 @@ class ConvertingTest extends TestCase
 
     public function testArrayReturnsTheUnderlyingArray(): void
     {
-        $array = Dictionary::make()
-            ->merge([
-                'foo' => 1,
-                'bar' => 2,
-            ])
+        $array = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ])
             ->array();
 
         $this->assertSame([
@@ -36,11 +35,10 @@ class ConvertingTest extends TestCase
 
     public function testGetIteratorCanBeIterated(): void
     {
-        $iterator = Dictionary::make()
-            ->merge([
-                'foo' => 1,
-                'bar' => 2,
-            ])
+        $iterator = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ])
             ->getIterator();
 
         $this->assertIterator($iterator, [
@@ -53,11 +51,10 @@ class ConvertingTest extends TestCase
 
     public function testIteratorCanBeIterated(): void
     {
-        $iterator = Dictionary::make()
-            ->merge([
-                'foo' => 1,
-                'bar' => 2,
-            ])
+        $iterator = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ])
             ->iterator();
 
         $this->assertIterator($iterator, [

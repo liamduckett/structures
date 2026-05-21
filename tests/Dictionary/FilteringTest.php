@@ -97,7 +97,7 @@ class FilteringTest extends TestCase
 
     public function testSearchReturnsAllMatchingKeys(): void
     {
-        $dictionary = Dictionary::make()->merge([
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
             'baz' => 1,
@@ -110,7 +110,7 @@ class FilteringTest extends TestCase
 
     public function testSearchReturnsEmptyWhenValueNotFound(): void
     {
-        $dictionary = Dictionary::make()->merge([
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
         ]);
@@ -122,13 +122,13 @@ class FilteringTest extends TestCase
 
     public function testSearchUsesStrictComparison(): void
     {
-        $dictionary = Dictionary::make()->merge([
+        $dictionary = Dictionary::make([
             'foo' => 1,
-            'bar' => 2,
+            'bar' => '1',
         ]);
 
-        $keys = $dictionary->search('1');
+        $keys = $dictionary->search(1);
 
-        $this->assertSequence($keys, []);
+        $this->assertSequence($keys, ['foo']);
     }
 }

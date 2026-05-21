@@ -2,8 +2,9 @@
 
 namespace Liamduckett\Structures;
 
+use Closure;
+use Generator;
 use IteratorAggregate;
-use Liamduckett\Structures\Concerns\BuildsTypedIterator;
 use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 use Traversable;
 
@@ -16,19 +17,21 @@ use Traversable;
  */
 final class Dictionary implements IteratorAggregate
 {
-    use BuildsTypedIterator;
-
-    /** @var array<non-empty-string, T> */
-    private array $items;
+    /** @var Closure(): Generator<non-empty-string, T, mixed, void> */
+    private Closure $factory;
 
     // Creation ---
 
     /**
-     * @param iterable<non-empty-string, T> $items
+     * @param (Closure(): Generator<non-empty-string, T, mixed, void>)|iterable<non-empty-string, T> $items
      */
-    public function __construct(iterable $items = [])
+    public function __construct(Closure|iterable $items = [])
     {
-        $this->items = is_array($items) ? $items : iterator_to_array($items);
+        $this->factory = $items instanceof Closure
+            ? $items
+            : static function () use ($items): Generator {
+                yield from $items;
+            };
     }
 
     /**
@@ -51,38 +54,32 @@ final class Dictionary implements IteratorAggregate
      */
     public function set(mixed $key, mixed $value): static
     {
-        $items = $this->array();
-        $items[$key] = $value;
+        return new self(function () use ($key, $value): Generator {
+            $found = false;
 
-        return new self($items);
-    }
+            foreach ($this->iterator() as $existingKey => $existingValue) {
+                if ($existingKey === $key) {
+                    $found = true;
 
-    /**
-     * @param iterable<non-empty-string, T> $items
-     */
-    public function merge(iterable $items): static
-    {
-        $results = [];
+                    yield $existingKey => $value;
 
-        foreach ($this->items as $key => $item) {
-            $results[$key] = $item;
-        }
+                    continue;
+                }
 
-        foreach ($items as $key => $item) {
-            $results[$key] = $item;
-        }
+                yield $existingKey => $existingValue;
+            }
 
-        return new self($results);
+            if (!$found) {
+                yield $key => $value;
+            }
+        });
     }
 
     // Removing ---
 
     public function remove(string $key): static
     {
-        $items = $this->array();
-        unset($items[$key]);
-
-        return new self($items);
+        return $this->filter(static fn (mixed $_, string $currentKey) => $currentKey !== $key);
     }
 
     // Retrieving ---
@@ -96,11 +93,13 @@ final class Dictionary implements IteratorAggregate
      */
     public function get(string $key): mixed
     {
-        if (!array_key_exists($key, $this->items)) {
-            throw new OffsetDoesntExistException($key);
+        foreach ($this->iterator() as $existingKey => $value) {
+            if ($existingKey === $key) {
+                return $value;
+            }
         }
 
-        return $this->items[$key];
+        throw new OffsetDoesntExistException($key);
     }
 
     /**
@@ -108,7 +107,9 @@ final class Dictionary implements IteratorAggregate
      */
     public function keys(): Sequence
     {
-        return new Sequence(array_keys($this->items));
+        return new Sequence(function (): Generator {
+            yield from iterable_keys($this->iterator());
+        });
     }
 
     /**
@@ -116,9 +117,9 @@ final class Dictionary implements IteratorAggregate
      */
     public function values(): Sequence
     {
-        return new Sequence(array_values(
-            $this->items
-        ));
+        return new Sequence(function (): Generator {
+            yield from iterable_values($this->iterator());
+        });
     }
 
     // Converting ---
@@ -128,12 +129,12 @@ final class Dictionary implements IteratorAggregate
      */
     public function array(): array
     {
-        return $this->items;
+        return iterable_to_array($this->iterator());
     }
 
     public function getIterator(): Traversable
     {
-        return $this->buildTypedIterator($this->items);
+        return ($this->factory)();
     }
 
     /**
@@ -151,13 +152,13 @@ final class Dictionary implements IteratorAggregate
      */
     public function filter(callable $callable): static
     {
-        $results = array_filter(
-            $this->items,
-            $callable,
-            ARRAY_FILTER_USE_BOTH,
-        );
-
-        return new self($results);
+        return new self(function () use ($callable): Generator {
+            foreach ($this->iterator() as $key => $value) {
+                if (true === $callable($value, $key)) {
+                    yield $key => $value;
+                }
+            }
+        });
     }
 
     /**
@@ -167,15 +168,13 @@ final class Dictionary implements IteratorAggregate
      */
     public function search(mixed $value): Sequence
     {
-        $results = [];
-
-        foreach ($this->items as $key => $item) {
-            if ($item === $value) {
-                $results[] = $key;
+        return new Sequence(function () use ($value): Generator {
+            foreach ($this->iterator() as $key => $item) {
+                if ($item === $value) {
+                    yield $key;
+                }
             }
-        }
-
-        return new Sequence($results);
+        });
     }
 
     // Mapping ---
@@ -189,13 +188,9 @@ final class Dictionary implements IteratorAggregate
      */
     public function map(callable $callable): self
     {
-        $results = [];
-
-        foreach ($this as $key => $item) {
-            $results[$key] = $callable($item, $key);
-        }
-
-        return new self($results);
+        return new self(function () use ($callable): Generator {
+            yield from iterable_map($this->iterator(), $callable);
+        });
     }
 
     // Chunking ---
@@ -207,9 +202,11 @@ final class Dictionary implements IteratorAggregate
      */
     public function chunk(int $size): Sequence
     {
-        $chunks = array_chunk($this->items, $size, true);
-
-        return new Sequence(array_map(static fn (array $chunk) => new self($chunk), $chunks));
+        return new Sequence(function () use ($size): Generator {
+            foreach (iterable_chunk($this->iterator(), $size) as $chunk) {
+                yield new self($chunk);
+            }
+        });
     }
 
     // Containing ---
@@ -219,7 +216,7 @@ final class Dictionary implements IteratorAggregate
      */
     public function containsKey(string $key): bool
     {
-        return array_key_exists($key, $this->items);
+        return iterable_contains_key($this->iterator(), $key);
     }
 
     /**
@@ -227,7 +224,7 @@ final class Dictionary implements IteratorAggregate
      */
     public function containsValue(mixed $value): bool
     {
-        return in_array($value, $this->items, true);
+        return iterable_contains($this->iterator(), $value);
     }
 
     /**
@@ -248,22 +245,11 @@ final class Dictionary implements IteratorAggregate
 
     public function isEmpty(): bool
     {
-        return [] === $this->items;
+        return iterable_empty($this->iterator());
     }
 
     public function isNotEmpty(): bool
     {
         return !$this->isEmpty();
-    }
-
-    // Sorting ---
-
-    public function sortKeyAscending(): static
-    {
-        $copy = $this->items;
-
-        ksort($copy);
-
-        return new self($copy);
     }
 }

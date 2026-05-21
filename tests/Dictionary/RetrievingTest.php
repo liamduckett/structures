@@ -20,11 +20,10 @@ class RetrievingTest extends TestCase
 
     public function testGetReturnsTheValueForAnExistingKey(): void
     {
-        $value = Dictionary::make()
-            ->merge([
-                'foo' => 1,
-                'bar' => 2,
-            ])
+        $value = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ])
             ->get('foo');
 
         $this->assertSame(1, $value);
@@ -41,11 +40,10 @@ class RetrievingTest extends TestCase
 
     public function testKeysReturnsAllKeys(): void
     {
-        $keys = Dictionary::make()
-            ->merge([
-                'foo' => 1,
-                'bar' => 2,
-            ])
+        $keys = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ])
             ->keys();
 
         $this->assertSequence($keys, ['foo', 'bar']);
@@ -62,11 +60,10 @@ class RetrievingTest extends TestCase
 
     public function testValuesStripsStringKeys(): void
     {
-        $values = Dictionary::make()
-            ->merge([
-                'foo' => 1,
-                'bar' => 2,
-            ])
+        $values = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ])
             ->values();
 
         $this->assertSequence($values, [1, 2]);

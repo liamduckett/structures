@@ -19,7 +19,7 @@ function value(Closure|iterable $value): iterable
 }
 
 /**
- * @template TKey of array-key
+ * @template TKey of int|string
  * @template T
  *
  * @param iterable<TKey, T> $iterable
@@ -36,14 +36,14 @@ function iterable_to_array(iterable $iterable): array
 }
 
 /**
- * @template TKey of array-key
+ * @template TKey of int|string
  * @template T
  * @template TReturn
  *
  * @param iterable<TKey, T>            $iterable
  * @param (callable(T, TKey): TReturn) $callable
  *
- * @return Generator<TKey, TReturn, null, void>
+ * @return Generator<TKey, TReturn, mixed, void>
  */
 function iterable_map(iterable $iterable, callable $callable): Generator
 {
@@ -53,13 +53,13 @@ function iterable_map(iterable $iterable, callable $callable): Generator
 }
 
 /**
- * @template TKey of array-key
+ * @template TKey of int|string
  * @template T
  *
  * @param iterable<TKey, T>         $iterable
  * @param (callable(T, TKey): bool) $callable
  *
- * @return Generator<TKey, T, null, void>
+ * @return Generator<TKey, T, mixed, void>
  */
 function iterable_filter(iterable $iterable, callable $callable): Generator
 {
@@ -75,12 +75,26 @@ function iterable_filter(iterable $iterable, callable $callable): Generator
  *
  * @param iterable<T> $iterable
  *
- * @return Generator<int, T, null, void>
+ * @return Generator<int, T, mixed, void>
  */
 function iterable_values(iterable $iterable): Generator
 {
     foreach ($iterable as $value) {
         yield $value;
+    }
+}
+
+/**
+ * @template TKey of int|string
+ *
+ * @param iterable<TKey, mixed> $iterable
+ *
+ * @return Generator<int, TKey, mixed, void>
+ */
+function iterable_keys(iterable $iterable): Generator
+{
+    foreach ($iterable as $key => $_) {
+        yield $key;
     }
 }
 
@@ -130,7 +144,25 @@ function iterable_empty(iterable $iterable): bool
 }
 
 /**
- * @template TKey of array-key
+ * @template TKey of int|string
+ * @template T
+ *
+ * @param iterable<TKey, T> $iterable
+ * @param TKey              $key
+ */
+function iterable_contains_key(iterable $iterable, int|string $key): bool
+{
+    foreach ($iterable as $existingKey => $_) {
+        if ($existingKey === $key) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @template TKey of int|string
  * @template T
  *
  * @param iterable<TKey, T> $iterable
@@ -196,12 +228,12 @@ function iterable_last(iterable $iterable): mixed
 }
 
 /**
- * @template TKey of array-key
+ * @template TKey of int|string
  * @template T
  *
  * @param iterable<TKey, T> ...$iterables
  *
- * @return Generator<TKey, T, null, void>
+ * @return Generator<TKey, T, mixed, void>
  */
 function iterable_merge(iterable ...$iterables): Generator
 {
@@ -213,14 +245,14 @@ function iterable_merge(iterable ...$iterables): Generator
 }
 
 /**
- * @template TKey of array-key
+ * @template TKey of int|string
  * @template T
  *
  * @param iterable<TKey, T> $iterable
  *
  * @return Generator<TKey, T, mixed, void>
  */
-function generator(iterable $iterable): Generator
+function iterable_to_generator(iterable $iterable): Generator
 {
     foreach ($iterable as $key => $value) {
         yield $key => $value;
@@ -228,7 +260,7 @@ function generator(iterable $iterable): Generator
 }
 
 /**
- * @template TKey of array-key
+ * @template TKey of int|string
  * @template T
  *
  * @param iterable<TKey, T> $iterable
@@ -238,7 +270,7 @@ function generator(iterable $iterable): Generator
  */
 function iterable_chunk(iterable $iterable, int $size): Generator
 {
-    $generator = generator($iterable);
+    $generator = iterable_to_generator($iterable);
 
     $remaining = 0;
 
@@ -278,7 +310,7 @@ function iterable_chunk(iterable $iterable, int $size): Generator
  */
 function iterable_chunk_values(iterable $iterable, int $size): Generator
 {
-    $generator = generator($iterable);
+    $generator = iterable_to_generator($iterable);
 
     $remaining = 0;
 

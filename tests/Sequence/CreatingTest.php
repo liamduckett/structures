@@ -2,7 +2,6 @@
 
 namespace Tests\Sequence;
 
-use ArrayIterator;
 use Liamduckett\Structures\Sequence;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
@@ -25,7 +24,7 @@ class CreatingTest extends TestCase
 
     public function testMakeWithAnIterable(): void
     {
-        $sequence = Sequence::make(new ArrayIterator([1, 2, 3]));
+        $sequence = Sequence::make($this->buildTypedIterator([1, 2, 3]));
 
         $this->assertSequence($sequence, [1, 2, 3]);
     }

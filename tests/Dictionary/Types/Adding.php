@@ -11,9 +11,3 @@ $dictionary = Dictionary::make(['foo' => 1]);
 $withSet = $dictionary->set('bar', 2);
 
 assertType('Liamduckett\Structures\Dictionary<int>', $withSet);
-
-// Merge ---
-
-$withMerge = $dictionary->merge(['bar' => 2]);
-
-assertType('Liamduckett\Structures\Dictionary<int>', $withMerge);
