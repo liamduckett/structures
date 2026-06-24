@@ -23,7 +23,17 @@ class IterableChunkValuesTest extends TestCase
             $result[] = iterator_to_array($chunk);
         }
 
-        $this->assertSame([[0 => 1, 1 => 2], [0 => 3, 1 => 4], [0 => 5]], $result);
+        $this->assertSame([
+            [
+                0 => 1,
+                1 => 2,
+            ], [
+                0 => 3,
+                1 => 4,
+            ], [
+                0 => 5,
+            ],
+        ], $result);
     }
 
     public function testPartialYielding(): void
@@ -49,7 +59,7 @@ class IterableChunkValuesTest extends TestCase
 
         $count = 0;
 
-        foreach ($chunks as $chunk) {
+        foreach ($chunks as $_) {
             ++$count;
         }
 
@@ -78,7 +88,17 @@ class IterableChunkValuesTest extends TestCase
             $result[] = iterator_to_array($chunk);
         }
 
-        $this->assertSame([[0 => 1, 1 => 2], [0 => 3, 1 => 4], [0 => 5]], $result);
+        $this->assertSame([
+            [
+                0 => 1,
+                1 => 2,
+            ], [
+                0 => 3,
+                1 => 4,
+            ], [
+                0 => 5,
+            ],
+        ], $result);
     }
 
     public function testChunkWithSizeEqualToLength(): void
@@ -117,6 +137,16 @@ class IterableChunkValuesTest extends TestCase
             $result[] = iterator_to_array($chunk);
         }
 
-        $this->assertSame([[0 => 1, 1 => 2], [0 => 3, 1 => 4], [0 => 5]], $result);
+        $this->assertSame([
+            [
+                0 => 1,
+                1 => 2,
+            ], [
+                0 => 3,
+                1 => 4,
+            ], [
+                0 => 5,
+            ],
+        ], $result);
     }
 }

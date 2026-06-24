@@ -19,47 +19,35 @@ class ConvertingTest extends TestCase
 
     public function testArrayReturnsTheUnderlyingArray(): void
     {
-        $array = Dictionary::make([
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
-        ])
-            ->array();
+        ]);
 
-        $this->assertSame([
-            'foo' => 1,
-            'bar' => 2,
-        ], $array);
+        $this->assertSame(['foo' => 1, 'bar' => 2], $dictionary->array());
     }
 
     // getIterator ---
 
     public function testGetIteratorCanBeIterated(): void
     {
-        $iterator = Dictionary::make([
-            'foo' => 1,
-            'bar' => 2,
-        ])
-            ->getIterator();
-
-        $this->assertIterator($iterator, [
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
         ]);
+
+        $this->assertIterator($dictionary->getIterator(), ['foo' => 1, 'bar' => 2]);
     }
 
     // iterator ---
 
     public function testIteratorCanBeIterated(): void
     {
-        $iterator = Dictionary::make([
-            'foo' => 1,
-            'bar' => 2,
-        ])
-            ->iterator();
-
-        $this->assertIterator($iterator, [
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
         ]);
+
+        $this->assertIterator($dictionary->iterator(), ['foo' => 1, 'bar' => 2]);
     }
 }

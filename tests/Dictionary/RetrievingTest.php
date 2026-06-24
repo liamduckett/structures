@@ -20,13 +20,12 @@ class RetrievingTest extends TestCase
 
     public function testGetReturnsTheValueForAnExistingKey(): void
     {
-        $value = Dictionary::make([
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
-        ])
-            ->get('foo');
+        ]);
 
-        $this->assertSame(1, $value);
+        $this->assertSame(1, $dictionary->get('foo'));
     }
 
     public function testGetThrowsForAMissingKey(): void
@@ -40,13 +39,12 @@ class RetrievingTest extends TestCase
 
     public function testKeysReturnsAllKeys(): void
     {
-        $keys = Dictionary::make([
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
-        ])
-            ->keys();
+        ]);
 
-        $this->assertSequence($keys, ['foo', 'bar']);
+        $this->assertSequence($dictionary->keys(), ['foo', 'bar']);
     }
 
     public function testKeysReturnsEmptyForAnEmptyDictionary(): void
@@ -60,13 +58,12 @@ class RetrievingTest extends TestCase
 
     public function testValuesStripsStringKeys(): void
     {
-        $values = Dictionary::make([
+        $dictionary = Dictionary::make([
             'foo' => 1,
             'bar' => 2,
-        ])
-            ->values();
+        ]);
 
-        $this->assertSequence($values, [1, 2]);
+        $this->assertSequence($dictionary->values(), [1, 2]);
     }
 
     public function testValuesReturnsEmptyForAnEmptyDictionary(): void
