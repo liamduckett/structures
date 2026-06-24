@@ -3,6 +3,7 @@
 namespace Liamduckett\Structures;
 
 use Closure;
+use Countable;
 use Generator;
 use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 
@@ -111,6 +112,10 @@ function iterable_count(iterable $iterable): int
         return count($iterable);
     }
 
+    if ($iterable instanceof Countable) {
+        return count($iterable);
+    }
+
     return iterator_count($iterable);
 }
 
@@ -154,6 +159,10 @@ function iterable_empty(iterable $iterable): bool
  */
 function iterable_contains_key(iterable $iterable, int|string $key): bool
 {
+    if (is_array($iterable) && is_int($key)) {
+        return array_key_exists($key, $iterable);
+    }
+
     foreach ($iterable as $existingKey => $_) {
         if ($existingKey === $key) {
             return true;
@@ -176,6 +185,10 @@ function iterable_contains_key(iterable $iterable, int|string $key): bool
  */
 function iterable_get(iterable $iterable, int|string $key): mixed
 {
+    if (is_array($iterable) && is_int($key) && array_key_exists($key, $iterable)) {
+        return $iterable[$key];
+    }
+
     foreach ($iterable as $k => $item) {
         if ($k === $key) {
             return $item;
@@ -214,6 +227,10 @@ function iterable_first(iterable $iterable): mixed
  */
 function iterable_last(iterable $iterable): mixed
 {
+    if (is_array($iterable) && [] !== $iterable) {
+        return $iterable[array_key_last($iterable)];
+    }
+
     $last = null;
     $found = false;
 

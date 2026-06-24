@@ -78,4 +78,11 @@ class IterableGetTest extends TestCase
 
         iterable_get(['a' => 1, 'b' => 2], 'z');
     }
+
+    public function testGetUsesStrictKeyComparison(): void
+    {
+        $this->expectException(OffsetDoesntExistException::class);
+
+        iterable_get([10, 20, 30], '1');
+    }
 }

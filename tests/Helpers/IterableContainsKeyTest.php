@@ -45,12 +45,12 @@ class IterableContainsKeyTest extends TestCase
         $this->assertTrue(iterable_contains_key($generator, 'foo'));
     }
 
-    public function testUsesStrictKeyComparison(): void
+    public function testContainsKeyUsesStrictKeyComparison(): void
     {
         $this->assertFalse(iterable_contains_key([1, 2, 3], '0'));
     }
 
-    public function testReturnsFalseForEmptyIterable(): void
+    public function testContainsKeyReturnsFalseForEmptyIterable(): void
     {
         $this->assertFalse(iterable_contains_key([], 'a'));
     }
