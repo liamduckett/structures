@@ -28,11 +28,13 @@ function value(Closure|iterable $value): iterable
  */
 function iterable_to_array(iterable $iterable): array
 {
-    if (is_array($iterable)) {
-        return $iterable;
+    $array = [];
+
+    foreach ($iterable as $key => $value) {
+        $array[$key] = $value;
     }
 
-    return iterator_to_array($iterable);
+    return $array;
 }
 
 /**

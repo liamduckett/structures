@@ -55,8 +55,7 @@ class AddingTest extends TestCase
 
     public function testPrependAcceptsAnIterable(): void
     {
-        $sequence = Sequence::make([3, 4])
-            ->prepend(new ArrayIterator([1, 2]));
+        $sequence = Sequence::make([3, 4])->prepend(new ArrayIterator([1, 2]));
 
         $this->assertSequence($sequence, [1, 2, 3, 4]);
     }
@@ -83,8 +82,7 @@ class AddingTest extends TestCase
 
     public function testMergeAcceptsAnIterable(): void
     {
-        $sequence = Sequence::make([1, 2])
-            ->merge(new ArrayIterator([3, 4]));
+        $sequence = Sequence::make([1, 2])->merge(new ArrayIterator([3, 4]));
 
         $this->assertSequence($sequence, [1, 2, 3, 4]);
     }
