@@ -160,11 +160,7 @@ final class Sequence implements Countable, IteratorAggregate
     public function filter(callable $callable): static
     {
         return new self(function () use ($callable): Generator {
-            foreach ($this->iterator() as $index => $item) {
-                if (true === $callable($item, $index)) {
-                    yield $item;
-                }
-            }
+            yield from iterable_values(iterable_filter($this->iterator(), $callable));
         });
     }
 
@@ -193,21 +189,7 @@ final class Sequence implements Countable, IteratorAggregate
     public function slice(int $offset, ?int $length = null): static
     {
         return new self(function () use ($offset, $length): Generator {
-            $index = 0;
-            $extracted = 0;
-
-            foreach ($this->iterator() as $item) {
-                if ($index++ < $offset) {
-                    continue;
-                }
-
-                if (null !== $length && $extracted >= $length) {
-                    break;
-                }
-
-                yield $item;
-                ++$extracted;
-            }
+            yield from iterable_values(iterable_slice($this->iterator(), $offset, $length));
         });
     }
 

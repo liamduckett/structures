@@ -250,6 +250,37 @@ function iterable_map(iterable $iterable, callable $callable): Generator
     }
 }
 
+// Removing ---
+
+/**
+ * @template TKey of int|string
+ * @template T
+ *
+ * @param iterable<TKey, T> $iterable
+ * @param non-negative-int  $offset
+ * @param null|positive-int $length
+ *
+ * @return Generator<TKey, T, mixed, void>
+ */
+function iterable_slice(iterable $iterable, int $offset, ?int $length = null): Generator
+{
+    $index = 0;
+    $extracted = 0;
+
+    foreach ($iterable as $key => $value) {
+        if ($index++ < $offset) {
+            continue;
+        }
+
+        if (null !== $length && $extracted >= $length) {
+            break;
+        }
+
+        yield $key => $value;
+        ++$extracted;
+    }
+}
+
 // Retrieving ---
 
 /**

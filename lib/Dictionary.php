@@ -166,11 +166,7 @@ final class Dictionary implements IteratorAggregate
     public function filter(callable $callable): static
     {
         return new self(function () use ($callable): Generator {
-            foreach ($this->iterator() as $key => $value) {
-                if (true === $callable($value, $key)) {
-                    yield $key => $value;
-                }
-            }
+            yield from iterable_filter($this->iterator(), $callable);
         });
     }
 
@@ -224,13 +220,7 @@ final class Dictionary implements IteratorAggregate
      */
     public function get(string $key): mixed
     {
-        foreach ($this->iterator() as $existingKey => $value) {
-            if ($existingKey === $key) {
-                return $value;
-            }
-        }
-
-        throw new OffsetDoesntExistException($key);
+        return iterable_get($this->iterator(), $key);
     }
 
     /**
