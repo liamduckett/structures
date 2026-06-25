@@ -12,8 +12,10 @@ use function Liamduckett\Structures\iterable_map;
  *
  * @coversNothing
  */
-class IterableMapTest extends TestCase
+class MappingTest extends TestCase
 {
+    // Map ---
+
     public function testMapOverAnArray(): void
     {
         $result = iterable_map([1, 2, 3], static fn (int $value) => $value * 2);

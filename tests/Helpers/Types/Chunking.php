@@ -1,7 +1,10 @@
 <?php
 
 use function Liamduckett\Structures\iterable_chunk;
+use function Liamduckett\Structures\iterable_chunk_values;
 use function PHPStan\Testing\assertType;
+
+// Chunk ---
 
 $result = iterable_chunk([1, 2, 3, 4, 5], 2);
 
@@ -22,3 +25,13 @@ $notEmptyStringArray = [];
 $result = iterable_chunk($notEmptyStringArray, 2);
 
 assertType('Generator<int, Generator<non-empty-string, int, mixed, void>, mixed, void>', $result);
+
+// Chunk Values ---
+
+$result = iterable_chunk_values([1, 2, 3, 4, 5], 2);
+
+assertType('Generator<int, Generator<int, int, mixed, void>, mixed, void>', $result);
+
+$result = iterable_chunk_values(['a' => 'x', 'b' => 'y'], 1);
+
+assertType('Generator<int, Generator<int, string, mixed, void>, mixed, void>', $result);

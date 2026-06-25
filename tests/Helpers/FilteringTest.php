@@ -12,8 +12,10 @@ use function Liamduckett\Structures\iterable_filter;
  *
  * @coversNothing
  */
-class IterableFilterTest extends TestCase
+class FilteringTest extends TestCase
 {
+    // Filter ---
+
     public function testFilterAnArray(): void
     {
         $result = iterable_filter([1, 2, 3, 4], static fn (int $value) => $value > 2);

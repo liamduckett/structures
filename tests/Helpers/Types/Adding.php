@@ -3,6 +3,8 @@
 use function Liamduckett\Structures\iterable_merge;
 use function PHPStan\Testing\assertType;
 
+// Merge ---
+
 $result = iterable_merge([1, 2], [3, 4]);
 
 assertType('Generator<0|1, int, mixed, void>', $result);

@@ -12,8 +12,10 @@ use function Liamduckett\Structures\iterable_merge;
  *
  * @coversNothing
  */
-class IterableMergeTest extends TestCase
+class AddingTest extends TestCase
 {
+    // Merge ---
+
     public function testMergeTwoArrays(): void
     {
         $result = iterable_merge([1, 2], [3, 4]);

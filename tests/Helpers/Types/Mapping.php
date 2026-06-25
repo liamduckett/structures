@@ -3,6 +3,8 @@
 use function Liamduckett\Structures\iterable_map;
 use function PHPStan\Testing\assertType;
 
+// Map ---
+
 $result = iterable_map([1, 2, 3], static fn (int $value) => $value * 2);
 
 assertType('Generator<0|1|2, int, mixed, void>', $result);

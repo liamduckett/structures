@@ -3,6 +3,8 @@
 use function Liamduckett\Structures\iterable_filter;
 use function PHPStan\Testing\assertType;
 
+// Filter ---
+
 $result = iterable_filter([1, 2, 3], static fn (int $value) => $value > 1);
 
 assertType('Generator<0|1|2, int, mixed, void>', $result);
