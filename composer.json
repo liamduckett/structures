@@ -26,10 +26,10 @@
         "php": "8.0 - 8.5"
     },
     "scripts": {
-        "analyse": "phpstan analyse",
+        "analyse": "phpstan analyse --memory-limit=2G",
         "lint": "php-cs-fixer fix",
         "lint:check": "php-cs-fixer check",
-        "test": "phpunit",
+        "test": "phpunit --fail-on-warning --fail-on-risky",
         "check": [
             "@analyse",
             "@lint:check",

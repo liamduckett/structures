@@ -17,13 +17,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
       - name: Install dependencies
-        uses: php-actions/composer@v6
+        run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Run tests
-        uses: php-actions/phpunit@v4
-        with:
-          php_version: ${{ matrix.php }}
+        run: composer test
 
   static-analysis:
     name: Static Analysis
@@ -37,10 +40,10 @@ jobs:
         uses: shivammathur/setup-php@v2
 
       - name: Install dependencies
-        uses: php-actions/composer@v6
+        run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Run static analyser
-        run: vendor/bin/phpstan analyse --no-progress
+        run: composer analyse
 
   coding-standards:
     name: Coding Standards
@@ -56,7 +59,7 @@ jobs:
           php-version: 8.0
 
       - name: Install dependencies
-        uses: php-actions/composer@v6
+        run: composer install --prefer-dist --no-interaction --no-progress
 
       - name: Check coding standards
-        run: vendor/bin/php-cs-fixer check --show-progress=none
+        run: composer lint:check
