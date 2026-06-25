@@ -85,6 +85,105 @@ final class Sequence implements Countable, IteratorAggregate
         );
     }
 
+    // Chunking ---
+
+    /**
+     * @param positive-int $size
+     *
+     * @return self<self<T>>
+     */
+    public function chunk(int $size): self
+    {
+        return new self(function () use ($size): Generator {
+            foreach (iterable_chunk_values($this->iterator(), $size) as $chunk) {
+                yield new self($chunk);
+            }
+        });
+    }
+
+    // Containing ---
+
+    /**
+     * @param T $value
+     */
+    public function contains(mixed $value): bool
+    {
+        return iterable_contains($this->iterator(), $value);
+    }
+
+    /**
+     * @param T $value
+     */
+    public function doesntContain(mixed $value): bool
+    {
+        return !$this->contains($value);
+    }
+
+    public function isEmpty(): bool
+    {
+        return iterable_empty($this->iterator());
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
+    }
+
+    // Converting ---
+
+    /**
+     * @return list<T>
+     */
+    public function array(): array
+    {
+        return iterator_to_array($this->iterator(), false);
+    }
+
+    public function getIterator(): Traversable
+    {
+        return ($this->factory)();
+    }
+
+    /**
+     * @return Traversable<int, T>
+     */
+    public function iterator(): Traversable
+    {
+        return $this->getIterator();
+    }
+
+    // Filtering ---
+
+    /**
+     * @param callable(T, int): bool $callable
+     */
+    public function filter(callable $callable): static
+    {
+        return new self(function () use ($callable): Generator {
+            foreach ($this->iterator() as $index => $item) {
+                if (true === $callable($item, $index)) {
+                    yield $item;
+                }
+            }
+        });
+    }
+
+    // Mapping ---
+
+    /**
+     * @template TMap
+     *
+     * @param callable(T, int): TMap $callable
+     *
+     * @return self<TMap>
+     */
+    public function map(callable $callable): self
+    {
+        return new self(function () use ($callable): Generator {
+            yield from iterable_map($this->iterator(), $callable);
+        });
+    }
+
     // Removing ---
 
     /**
@@ -147,104 +246,5 @@ final class Sequence implements Countable, IteratorAggregate
     public function count(): int
     {
         return iterable_count($this->iterator());
-    }
-
-    // Converting ---
-
-    /**
-     * @return list<T>
-     */
-    public function array(): array
-    {
-        return iterator_to_array($this->iterator(), false);
-    }
-
-    public function getIterator(): Traversable
-    {
-        return ($this->factory)();
-    }
-
-    /**
-     * @return Traversable<int, T>
-     */
-    public function iterator(): Traversable
-    {
-        return $this->getIterator();
-    }
-
-    // Filtering ---
-
-    /**
-     * @param callable(T, int): bool $callable
-     */
-    public function filter(callable $callable): static
-    {
-        return new self(function () use ($callable): Generator {
-            foreach ($this->iterator() as $index => $item) {
-                if (true === $callable($item, $index)) {
-                    yield $item;
-                }
-            }
-        });
-    }
-
-    // Mapping ---
-
-    /**
-     * @template TMap
-     *
-     * @param callable(T, int): TMap $callable
-     *
-     * @return self<TMap>
-     */
-    public function map(callable $callable): self
-    {
-        return new self(function () use ($callable): Generator {
-            yield from iterable_map($this->iterator(), $callable);
-        });
-    }
-
-    // Chunking ---
-
-    /**
-     * @param positive-int $size
-     *
-     * @return self<self<T>>
-     */
-    public function chunk(int $size): self
-    {
-        return new self(function () use ($size): Generator {
-            foreach (iterable_chunk_values($this->iterator(), $size) as $chunk) {
-                yield new self($chunk);
-            }
-        });
-    }
-
-    // Containing ---
-
-    /**
-     * @param T $value
-     */
-    public function contains(mixed $value): bool
-    {
-        return iterable_contains($this->iterator(), $value);
-    }
-
-    /**
-     * @param T $value
-     */
-    public function doesntContain(mixed $value): bool
-    {
-        return !$this->contains($value);
-    }
-
-    public function isEmpty(): bool
-    {
-        return iterable_empty($this->iterator());
-    }
-
-    public function isNotEmpty(): bool
-    {
-        return !$this->isEmpty();
     }
 }

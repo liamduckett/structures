@@ -75,51 +75,64 @@ final class Dictionary implements IteratorAggregate
         });
     }
 
-    // Removing ---
+    // Chunking ---
 
-    public function remove(string $key): static
+    /**
+     * @param positive-int $size
+     *
+     * @return Sequence<self<T>>
+     */
+    public function chunk(int $size): Sequence
     {
-        return $this->filter(static fn (mixed $_, string $currentKey) => $currentKey !== $key);
+        return new Sequence(function () use ($size): Generator {
+            foreach (iterable_chunk($this->iterator(), $size) as $chunk) {
+                yield new self($chunk);
+            }
+        });
     }
 
-    // Retrieving ---
+    // Containing ---
 
     /**
      * @param non-empty-string $key
-     *
-     * @return T
-     *
-     * @throws OffsetDoesntExistException
      */
-    public function get(string $key): mixed
+    public function containsKey(string $key): bool
     {
-        foreach ($this->iterator() as $existingKey => $value) {
-            if ($existingKey === $key) {
-                return $value;
-            }
-        }
-
-        throw new OffsetDoesntExistException($key);
+        return iterable_contains_key($this->iterator(), $key);
     }
 
     /**
-     * @return Sequence<non-empty-string>
+     * @param T $value
      */
-    public function keys(): Sequence
+    public function containsValue(mixed $value): bool
     {
-        return new Sequence(function (): Generator {
-            yield from iterable_keys($this->iterator());
-        });
+        return iterable_contains($this->iterator(), $value);
     }
 
     /**
-     * @return Sequence<T>
+     * @param non-empty-string $key
      */
-    public function values(): Sequence
+    public function doesntContainKey(string $key): bool
     {
-        return new Sequence(function (): Generator {
-            yield from iterable_values($this->iterator());
-        });
+        return !$this->containsKey($key);
+    }
+
+    /**
+     * @param T $value
+     */
+    public function doesntContainValue(mixed $value): bool
+    {
+        return !$this->containsValue($value);
+    }
+
+    public function isEmpty(): bool
+    {
+        return iterable_empty($this->iterator());
+    }
+
+    public function isNotEmpty(): bool
+    {
+        return !$this->isEmpty();
     }
 
     // Converting ---
@@ -193,63 +206,50 @@ final class Dictionary implements IteratorAggregate
         });
     }
 
-    // Chunking ---
+    // Removing ---
+
+    public function remove(string $key): static
+    {
+        return $this->filter(static fn (mixed $_, string $currentKey) => $currentKey !== $key);
+    }
+
+    // Retrieving ---
 
     /**
-     * @param positive-int $size
+     * @param non-empty-string $key
      *
-     * @return Sequence<self<T>>
+     * @return T
+     *
+     * @throws OffsetDoesntExistException
      */
-    public function chunk(int $size): Sequence
+    public function get(string $key): mixed
     {
-        return new Sequence(function () use ($size): Generator {
-            foreach (iterable_chunk($this->iterator(), $size) as $chunk) {
-                yield new self($chunk);
+        foreach ($this->iterator() as $existingKey => $value) {
+            if ($existingKey === $key) {
+                return $value;
             }
+        }
+
+        throw new OffsetDoesntExistException($key);
+    }
+
+    /**
+     * @return Sequence<non-empty-string>
+     */
+    public function keys(): Sequence
+    {
+        return new Sequence(function (): Generator {
+            yield from iterable_keys($this->iterator());
         });
     }
 
-    // Containing ---
-
     /**
-     * @param non-empty-string $key
+     * @return Sequence<T>
      */
-    public function containsKey(string $key): bool
+    public function values(): Sequence
     {
-        return iterable_contains_key($this->iterator(), $key);
-    }
-
-    /**
-     * @param T $value
-     */
-    public function containsValue(mixed $value): bool
-    {
-        return iterable_contains($this->iterator(), $value);
-    }
-
-    /**
-     * @param non-empty-string $key
-     */
-    public function doesntContainKey(string $key): bool
-    {
-        return !$this->containsKey($key);
-    }
-
-    /**
-     * @param T $value
-     */
-    public function doesntContainValue(mixed $value): bool
-    {
-        return !$this->containsValue($value);
-    }
-
-    public function isEmpty(): bool
-    {
-        return iterable_empty($this->iterator());
-    }
-
-    public function isNotEmpty(): bool
-    {
-        return !$this->isEmpty();
+        return new Sequence(function (): Generator {
+            yield from iterable_values($this->iterator());
+        });
     }
 }
