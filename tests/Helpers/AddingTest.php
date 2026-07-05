@@ -6,6 +6,7 @@ use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 
 use function Liamduckett\Structures\iterable_merge;
+use function Liamduckett\Structures\iterable_set;
 
 /**
  * @internal
@@ -69,5 +70,35 @@ class AddingTest extends TestCase
         $result = iterable_merge([], []);
 
         $this->assertSame([], iterator_to_array($result));
+    }
+
+    // Set ---
+
+    public function testSetAppendsANewKey(): void
+    {
+        $result = iterable_set(['foo' => 1], 'bar', 2);
+
+        $this->assertSame(['foo' => 1, 'bar' => 2], iterator_to_array($result));
+    }
+
+    public function testSetUpdatesAnExistingKeyInPlace(): void
+    {
+        $result = iterable_set(['foo' => 1, 'bar' => 2], 'foo', 99);
+
+        $this->assertSame(['foo' => 99, 'bar' => 2], iterator_to_array($result));
+    }
+
+    public function testSetAppendsToAnEmptyIterable(): void
+    {
+        $result = iterable_set([], 'foo', 1);
+
+        $this->assertSame(['foo' => 1], iterator_to_array($result));
+    }
+
+    public function testSetWorksWithAnIterable(): void
+    {
+        $result = iterable_set(new ArrayIterator(['foo' => 1]), 'bar', 2);
+
+        $this->assertSame(['foo' => 1, 'bar' => 2], iterator_to_array($result));
     }
 }

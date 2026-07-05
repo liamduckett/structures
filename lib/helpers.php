@@ -26,6 +26,37 @@ function iterable_merge(iterable ...$iterables): Generator
     }
 }
 
+/**
+ * @template TKey of int|string
+ * @template T
+ *
+ * @param iterable<TKey, T> $iterable
+ * @param TKey              $key
+ * @param T                 $value
+ *
+ * @return Generator<TKey, T, mixed, void>
+ */
+function iterable_set(iterable $iterable, mixed $key, mixed $value): Generator
+{
+    $found = false;
+
+    foreach ($iterable as $existingKey => $existingValue) {
+        if ($existingKey === $key) {
+            $found = true;
+
+            yield $existingKey => $value;
+
+            continue;
+        }
+
+        yield $existingKey => $existingValue;
+    }
+
+    if (!$found) {
+        yield $key => $value;
+    }
+}
+
 // Chunking ---
 
 /**

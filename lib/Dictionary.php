@@ -55,23 +55,7 @@ final class Dictionary implements IteratorAggregate
     public function set(mixed $key, mixed $value): static
     {
         return new self(function () use ($key, $value): Generator {
-            $found = false;
-
-            foreach ($this->iterator() as $existingKey => $existingValue) {
-                if ($existingKey === $key) {
-                    $found = true;
-
-                    yield $existingKey => $value;
-
-                    continue;
-                }
-
-                yield $existingKey => $existingValue;
-            }
-
-            if (!$found) {
-                yield $key => $value;
-            }
+            yield from iterable_set($this->iterator(), $key, $value);
         });
     }
 
