@@ -164,6 +164,18 @@ final class Sequence implements Countable, IteratorAggregate
         });
     }
 
+    /**
+     * @param T $value
+     *
+     * @return self<int>
+     */
+    public function search(mixed $value): self
+    {
+        return new self(function () use ($value): Generator {
+            yield from iterable_search($this->iterator(), $value);
+        });
+    }
+
     // Mapping ---
 
     /**

@@ -178,11 +178,7 @@ final class Dictionary implements IteratorAggregate
     public function search(mixed $value): Sequence
     {
         return new Sequence(function () use ($value): Generator {
-            foreach ($this->iterator() as $key => $item) {
-                if ($item === $value) {
-                    yield $key;
-                }
-            }
+            yield from iterable_search($this->iterator(), $value);
         });
     }
 

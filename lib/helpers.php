@@ -231,6 +231,22 @@ function iterable_filter(iterable $iterable, callable $callable): Generator
     }
 }
 
+/**
+ * @template TKey of int|string
+ *
+ * @param iterable<TKey, mixed> $iterable
+ *
+ * @return Generator<int, TKey, mixed, void>
+ */
+function iterable_search(iterable $iterable, mixed $value): Generator
+{
+    foreach ($iterable as $key => $item) {
+        if ($item === $value) {
+            yield $key;
+        }
+    }
+}
+
 // Mapping ---
 
 /**

@@ -76,4 +76,33 @@ class FilteringTest extends TestCase
 
         $this->assertSame(0, $calls);
     }
+
+    // Search ---
+
+    public function testSearchReturnsIndexesOfMatchingValues(): void
+    {
+        $sequence = Sequence::make([10, 20, 30, 20]);
+
+        $indexes = $sequence->search(20);
+
+        $this->assertSequence($indexes, [1, 3]);
+    }
+
+    public function testSearchReturnsEmptyWhenValueNotFound(): void
+    {
+        $sequence = Sequence::make([1, 2, 3]);
+
+        $indexes = $sequence->search(99);
+
+        $this->assertSequence($indexes, []);
+    }
+
+    public function testSearchUsesStrictComparison(): void
+    {
+        $sequence = Sequence::make([1, '1']);
+
+        $indexes = $sequence->search(1);
+
+        $this->assertSequence($indexes, [0]);
+    }
 }

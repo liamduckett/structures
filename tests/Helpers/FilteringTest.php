@@ -6,6 +6,7 @@ use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 
 use function Liamduckett\Structures\iterable_filter;
+use function Liamduckett\Structures\iterable_search;
 
 /**
  * @internal
@@ -77,5 +78,35 @@ class FilteringTest extends TestCase
         });
 
         $this->assertSame(0, $calls);
+    }
+
+    // Search ---
+
+    public function testSearchReturnsKeysOfMatchingValues(): void
+    {
+        $result = iterable_search(['foo' => 1, 'bar' => 2, 'baz' => 1], 1);
+
+        $this->assertSame(['foo', 'baz'], iterator_to_array($result));
+    }
+
+    public function testSearchReturnsIntegerKeysForSequentialIterables(): void
+    {
+        $result = iterable_search([10, 20, 30, 20], 20);
+
+        $this->assertSame([1, 3], iterator_to_array($result));
+    }
+
+    public function testSearchReturnsEmptyWhenNothingMatches(): void
+    {
+        $result = iterable_search([1, 2, 3], 99);
+
+        $this->assertSame([], iterator_to_array($result));
+    }
+
+    public function testSearchUsesStrictComparison(): void
+    {
+        $result = iterable_search(['foo' => 1, 'bar' => '1'], 1);
+
+        $this->assertSame(['foo'], iterator_to_array($result));
     }
 }

@@ -11,3 +11,9 @@ $sequence = Sequence::make([1, 2, 3]);
 $filtered = $sequence->filter(static fn (int $value) => $value > 1);
 
 assertType('Liamduckett\Structures\Sequence<int>', $filtered);
+
+// Search ---
+
+$searched = $sequence->search(1);
+
+assertType('Liamduckett\Structures\Sequence<int>', $searched);
