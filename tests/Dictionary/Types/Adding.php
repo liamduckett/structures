@@ -8,6 +8,10 @@ $dictionary = Dictionary::make(['foo' => 1]);
 
 // Set ---
 
-$withSet = $dictionary->set('bar', 2);
+$set = $dictionary->set('bar', 2);
 
-assertType('Liamduckett\Structures\Dictionary<int>', $withSet);
+assertType('Liamduckett\Structures\Dictionary<int>', $set);
+
+$setWithEmptyKey = $dictionary->set('', 2); // @phpstan-ignore argument.type
+
+assertType('Liamduckett\Structures\Dictionary<int>', $setWithEmptyKey);

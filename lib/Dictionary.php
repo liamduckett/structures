@@ -94,7 +94,7 @@ final class Dictionary implements IteratorAggregate
     // Containing ---
 
     /**
-     * @param non-empty-string $key
+     * @return ($key is non-empty-string ? bool : false)
      */
     public function containsKey(string $key): bool
     {
@@ -110,7 +110,7 @@ final class Dictionary implements IteratorAggregate
     }
 
     /**
-     * @param non-empty-string $key
+     * @return ($key is non-empty-string ? bool : true)
      */
     public function doesntContainKey(string $key): bool
     {
@@ -212,8 +212,6 @@ final class Dictionary implements IteratorAggregate
     // Retrieving ---
 
     /**
-     * @param non-empty-string $key
-     *
      * @return T
      *
      * @throws OffsetDoesntExistException

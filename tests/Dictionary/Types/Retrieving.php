@@ -10,9 +10,11 @@ $dictionary = Dictionary::make(['foo' => 1]);
 
 $existing = $dictionary->get('foo');
 $missing = $dictionary->get('bar');
+$emptyKey = $dictionary->get('');
 
 assertType('int', $existing);
 assertType('int', $missing);
+assertType('int', $emptyKey);
 
 // Keys ---
 

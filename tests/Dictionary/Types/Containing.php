@@ -12,6 +12,10 @@ $containsKey = $dictionary->containsKey('foo');
 
 assertType('bool', $containsKey);
 
+$containsKeyEmpty = $dictionary->containsKey('');
+
+assertType('false', $containsKeyEmpty);
+
 // ContainsValue ---
 
 $containsValue = $dictionary->containsValue(1);
@@ -23,6 +27,10 @@ assertType('bool', $containsValue);
 $doesntContainKey = $dictionary->doesntContainKey('foo');
 
 assertType('bool', $doesntContainKey);
+
+$doesntContainKeyEmpty = $dictionary->doesntContainKey('');
+
+assertType('true', $doesntContainKeyEmpty);
 
 // DoesntContainValue ---
 

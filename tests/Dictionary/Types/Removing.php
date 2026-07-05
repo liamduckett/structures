@@ -11,3 +11,7 @@ $dictionary = Dictionary::make(['foo' => 1]);
 $removed = $dictionary->remove('foo');
 
 assertType('Liamduckett\Structures\Dictionary<int>', $removed);
+
+$removedEmptyKey = $dictionary->remove('');
+
+assertType('Liamduckett\Structures\Dictionary<int>', $removedEmptyKey);
