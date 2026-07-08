@@ -56,4 +56,27 @@ class CreatingTest extends TestCase
 
         $this->assertSequence($sequence, [1, 2]);
     }
+
+    public function testConstructorReIndexesClosureKeys(): void
+    {
+        $sequence = new Sequence(static function () {
+            yield from [5 => 10, 10 => 20];
+        });
+
+        $this->assertSame(10, $sequence->get(0));
+        $this->assertSame(20, $sequence->get(1));
+    }
+
+    public function testConstructorReIndexesDuplicateClosureKeys(): void
+    {
+        $sequence = new Sequence(static function () {
+            yield from [10, 20];
+
+            yield from [30, 40];
+        });
+
+        $this->assertSequence($sequence, [10, 20, 30, 40]);
+
+        $this->assertSame(30, $sequence->get(2));
+    }
 }

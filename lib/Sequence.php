@@ -28,11 +28,9 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function __construct(Closure|iterable $items = [])
     {
-        $this->factory = $items instanceof Closure
-            ? $items
-            : static function () use ($items): Generator {
-                yield from iterable_values($items);
-            };
+        $this->factory = static function () use ($items): Generator {
+            yield from iterable_values($items instanceof Closure ? $items() : $items);
+        };
     }
 
     /**
@@ -50,7 +48,7 @@ final class Sequence implements Countable, IteratorAggregate
     // Adding ---
 
     /**
-     * @param iterable<T> $items
+     * @param iterable<int, T> $items
      */
     public function push(iterable $items): static
     {
@@ -68,21 +66,11 @@ final class Sequence implements Countable, IteratorAggregate
     }
 
     /**
-     * @param iterable<T> $items
+     * @param iterable<int, T> $items
      */
     public function merge(iterable $items): static
     {
-        return new self(
-            function () use ($items): Generator {
-                foreach ($this->iterator() as $item) {
-                    yield $item;
-                }
-
-                foreach ($items as $item) {
-                    yield $item;
-                }
-            }
-        );
+        return new self(iterable_merge($this->iterator(), $items));
     }
 
     // Chunking ---
@@ -159,9 +147,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function filter(callable $callable): static
     {
-        return new self(function () use ($callable): Generator {
-            yield from iterable_values(iterable_filter($this->iterator(), $callable));
-        });
+        return new self(iterable_filter($this->iterator(), $callable));
     }
 
     /**
@@ -171,9 +157,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function search(mixed $value): self
     {
-        return new self(function () use ($value): Generator {
-            yield from iterable_search($this->iterator(), $value);
-        });
+        return new self(iterable_search($this->iterator(), $value));
     }
 
     // Mapping ---
@@ -187,9 +171,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function map(callable $callable): self
     {
-        return new self(function () use ($callable): Generator {
-            yield from iterable_map($this->iterator(), $callable);
-        });
+        return new self(iterable_map($this->iterator(), $callable));
     }
 
     // Removing ---
@@ -200,9 +182,7 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function slice(int $offset, ?int $length = null): static
     {
-        return new self(function () use ($offset, $length): Generator {
-            yield from iterable_values(iterable_slice($this->iterator(), $offset, $length));
-        });
+        return new self(iterable_slice($this->iterator(), $offset, $length));
     }
 
     // Retrieving ---
