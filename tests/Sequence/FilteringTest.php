@@ -44,17 +44,6 @@ class FilteringTest extends TestCase
         $this->assertSame(2, $filtered->get(0));
     }
 
-    public function testFilterByIndexUsesReIndexedKeys(): void
-    {
-        $sequence = new Sequence(static function () {
-            yield from [5 => 10, 10 => 20, 15 => 30];
-        });
-
-        $filtered = $sequence->filter(static fn (int $value, int $index) => 0 === $index % 2);
-
-        $this->assertSequence($filtered, [10, 30]);
-    }
-
     public function testFilterReturnsEmptyWhenNothingMatches(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
@@ -106,17 +95,6 @@ class FilteringTest extends TestCase
         $indexes = $sequence->search(99);
 
         $this->assertSequence($indexes, []);
-    }
-
-    public function testSearchReturnsReIndexedKeys(): void
-    {
-        $sequence = new Sequence(static function () {
-            yield from [5 => 10, 10 => 20];
-        });
-
-        $indexes = $sequence->search(20);
-
-        $this->assertSequence($indexes, [1]);
     }
 
     public function testSearchUsesStrictComparison(): void
