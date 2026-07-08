@@ -147,6 +147,29 @@ class ChunkingTest extends TestCase
         ], $result);
     }
 
+    public function testChunkSubGeneratorsCanBeConsumedAfterOuterLoop(): void
+    {
+        $chunks = iterable_chunk([1, 2, 3, 4, 5, 6], 2);
+
+        $collected = [];
+
+        foreach ($chunks as $chunk) {
+            $collected[] = $chunk;
+        }
+
+        $result = [];
+
+        foreach ($collected as $chunk) {
+            $result[] = iterator_to_array($chunk);
+        }
+
+        $this->assertSame([
+            [0 => 1, 1 => 2],
+            [2 => 3, 3 => 4],
+            [4 => 5, 5 => 6],
+        ], $result);
+    }
+
     // Chunk Values ---
 
     public function testChunkValuesExhaustiveYielding(): void
@@ -283,6 +306,29 @@ class ChunkingTest extends TestCase
             ], [
                 0 => 5,
             ],
+        ], $result);
+    }
+
+    public function testChunkValuesSubGeneratorsCanBeConsumedAfterOuterLoop(): void
+    {
+        $chunks = iterable_chunk_values([1, 2, 3, 4, 5, 6], 2);
+
+        $collected = [];
+
+        foreach ($chunks as $chunk) {
+            $collected[] = $chunk;
+        }
+
+        $result = [];
+
+        foreach ($collected as $chunk) {
+            $result[] = iterator_to_array($chunk);
+        }
+
+        $this->assertSame([
+            [0 => 1, 1 => 2],
+            [0 => 3, 1 => 4],
+            [0 => 5, 1 => 6],
         ], $result);
     }
 }

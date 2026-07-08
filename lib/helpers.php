@@ -70,32 +70,23 @@ function iterable_set(iterable $iterable, mixed $key, mixed $value): Generator
  */
 function iterable_chunk(iterable $iterable, int $size): Generator
 {
-    $generator = iterable_to_generator($iterable);
+    $chunk = [];
 
-    $remaining = 0;
+    foreach (iterable_to_generator($iterable) as $key => $value) {
+        $chunk[$key] = $value;
 
-    while ($generator->valid()) {
-        while ($remaining > 0 && $generator->valid()) {
-            $generator->next();
-            --$remaining;
+        if (count($chunk) === $size) {
+            yield (static function () use ($chunk) {
+                yield from $chunk;
+            })();
+
+            $chunk = [];
         }
+    }
 
-        if (!$generator->valid()) {
-            break;
-        }
-
-        $remaining = $size;
-
-        yield (static function () use ($generator, &$remaining) {
-            while ($generator->valid() && $remaining > 0) {
-                $key = $generator->key();
-                $value = $generator->current();
-
-                --$remaining;
-                $generator->next();
-
-                yield $key => $value;
-            }
+    if ([] !== $chunk) {
+        yield (static function () use ($chunk) {
+            yield from $chunk;
         })();
     }
 }
@@ -110,31 +101,23 @@ function iterable_chunk(iterable $iterable, int $size): Generator
  */
 function iterable_chunk_values(iterable $iterable, int $size): Generator
 {
-    $generator = iterable_to_generator($iterable);
+    $chunk = [];
 
-    $remaining = 0;
+    foreach (iterable_to_generator($iterable) as $value) {
+        $chunk[] = $value;
 
-    while ($generator->valid()) {
-        while ($remaining > 0 && $generator->valid()) {
-            $generator->next();
-            --$remaining;
+        if (count($chunk) === $size) {
+            yield (static function () use ($chunk) {
+                yield from $chunk;
+            })();
+
+            $chunk = [];
         }
+    }
 
-        if (!$generator->valid()) {
-            break;
-        }
-
-        $remaining = $size;
-
-        yield (static function () use ($generator, &$remaining) {
-            while ($generator->valid() && $remaining > 0) {
-                $value = $generator->current();
-
-                --$remaining;
-                $generator->next();
-
-                yield $value;
-            }
+    if ([] !== $chunk) {
+        yield (static function () use ($chunk) {
+            yield from $chunk;
         })();
     }
 }
