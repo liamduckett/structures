@@ -147,6 +147,34 @@ class ChunkingTest extends TestCase
         ], $result);
     }
 
+    public function testChunkPreservesDuplicateKeys(): void
+    {
+        $generator = (static function () {
+            yield 'a' => 1;
+
+            yield 'a' => 2;
+
+            yield 'b' => 3;
+
+            yield 'c' => 4;
+        })();
+
+        $keys = [];
+        $values = [];
+
+        foreach (iterable_chunk($generator, 2) as $chunk) {
+            foreach ($chunk as $key => $value) {
+                $keys[] = $key;
+                $values[] = $value;
+            }
+
+            break;
+        }
+
+        $this->assertSame(['a', 'a'], $keys);
+        $this->assertSame([1, 2], $values);
+    }
+
     public function testChunkSubGeneratorsCanBeConsumedAfterOuterLoop(): void
     {
         $chunks = iterable_chunk([1, 2, 3, 4, 5, 6], 2);

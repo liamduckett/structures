@@ -69,6 +69,32 @@ class ChunkingTest extends TestCase
         ]);
     }
 
+    public function testChunkPreservesDuplicateKeys(): void
+    {
+        $dictionary = new Dictionary(static function () {
+            yield 'a' => 1;
+
+            yield 'a' => 2;
+
+            yield 'b' => 3;
+
+            yield 'c' => 4;
+        });
+
+        $firstChunk = $dictionary->chunk(2)->first();
+
+        $keys = [];
+        $values = [];
+
+        foreach ($firstChunk as $key => $value) {
+            $keys[] = $key;
+            $values[] = $value;
+        }
+
+        $this->assertSame(['a', 'a'], $keys);
+        $this->assertSame([1, 2], $values);
+    }
+
     public function testChunkWithSizeEqualToLength(): void
     {
         $dictionary = Dictionary::make([

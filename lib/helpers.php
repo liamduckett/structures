@@ -73,11 +73,13 @@ function iterable_chunk(iterable $iterable, int $size): Generator
     $chunk = [];
 
     foreach (iterable_to_generator($iterable) as $key => $value) {
-        $chunk[$key] = $value;
+        $chunk[] = [$key, $value];
 
         if (count($chunk) === $size) {
             yield (static function () use ($chunk) {
-                yield from $chunk;
+                foreach ($chunk as [$key, $value]) {
+                    yield $key => $value;
+                }
             })();
 
             $chunk = [];
@@ -86,7 +88,9 @@ function iterable_chunk(iterable $iterable, int $size): Generator
 
     if ([] !== $chunk) {
         yield (static function () use ($chunk) {
-            yield from $chunk;
+            foreach ($chunk as [$key, $value]) {
+                yield $key => $value;
+            }
         })();
     }
 }
