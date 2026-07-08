@@ -29,7 +29,11 @@ final class Sequence implements Countable, IteratorAggregate
     public function __construct(Closure|iterable $items = [])
     {
         $this->factory = static function () use ($items): Generator {
-            yield from iterable_values($items instanceof Closure ? $items() : $items);
+            $items = $items instanceof Closure
+                ? $items()
+                : $items;
+
+            yield from iterable_values($items);
         };
     }
 

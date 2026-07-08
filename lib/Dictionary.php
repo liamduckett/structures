@@ -27,11 +27,13 @@ final class Dictionary implements IteratorAggregate
      */
     public function __construct(Closure|iterable $items = [])
     {
-        $this->factory = $items instanceof Closure
-            ? $items
-            : static function () use ($items): Generator {
-                yield from $items;
-            };
+        $this->factory = static function () use ($items): Generator {
+            $items = $items instanceof Closure
+                ? $items()
+                : $items;
+
+            yield from $items;
+        };
     }
 
     /**
