@@ -306,12 +306,12 @@ function iterable_slice(iterable $iterable, int $offset, ?int $length = null): G
             continue;
         }
 
+        yield $key => $value;
+        ++$extracted;
+
         if (null !== $length && $extracted >= $length) {
             break;
         }
-
-        yield $key => $value;
-        ++$extracted;
     }
 }
 
