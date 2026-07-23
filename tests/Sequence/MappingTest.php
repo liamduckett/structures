@@ -5,6 +5,7 @@ namespace Tests\Sequence;
 use Liamduckett\Structures\Sequence;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -57,15 +58,19 @@ class MappingTest extends TestCase
 
     public function testMapIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        Sequence::make([1, 2, 3])->map(static function (int $value) use (&$calls): int {
-            ++$calls;
+        $mapped = Sequence::make([1, 2, 3])->map(static function (int $value) use ($counter): int {
+            $counter->increment();
 
             return $value * 2;
         });
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        $mapped->array();
+
+        $this->assertCount(3, $counter);
     }
 
     public function testMappedSequenceCanBeIteratedTwice(): void

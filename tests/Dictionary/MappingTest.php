@@ -5,6 +5,7 @@ namespace Tests\Dictionary;
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -79,19 +80,23 @@ class MappingTest extends TestCase
 
     public function testMapIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        $dictionary = new Dictionary(static function () use (&$calls) {
+        $dictionary = new Dictionary(static function () use ($counter) {
             foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
-                ++$calls;
+                $counter->increment();
 
                 yield $key => $value;
             }
         });
 
-        $dictionary->map(static fn (int $value) => $value * 2);
+        $mapped = $dictionary->map(static fn (int $value) => $value * 2);
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        $mapped->array();
+
+        $this->assertCount(2, $counter);
     }
 
     public function testMappedDictionaryCanBeIteratedTwice(): void

@@ -56,17 +56,4 @@ class MappingTest extends TestCase
 
         $this->assertSame(['a' => 2, 'b' => 4], iterator_to_array($result));
     }
-
-    public function testMapIsLazy(): void
-    {
-        $calls = 0;
-
-        iterable_map([1, 2, 3], static function (int $value) use (&$calls): int {
-            ++$calls;
-
-            return $value;
-        });
-
-        $this->assertSame(0, $calls);
-    }
 }

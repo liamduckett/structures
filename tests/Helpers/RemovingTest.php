@@ -4,6 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use Tests\Support\CallCounter;
 
 use function Liamduckett\Structures\iterable_slice;
 
@@ -80,6 +81,25 @@ class RemovingTest extends TestCase
         $result = iterable_slice([1, 2, 3], 1, 10);
 
         $this->assertSame([1 => 2, 2 => 3], iterator_to_array($result));
+    }
+
+    public function testSliceConsumesNoMoreThanOffsetPlusLengthElements(): void
+    {
+        $counter = new CallCounter();
+
+        $source = (static function () use ($counter) {
+            foreach ([1, 2, 3, 4, 5] as $value) {
+                $counter->increment();
+
+                yield $value;
+            }
+        })();
+
+        $result = iterable_slice($source, 1, 2);
+
+        iterator_to_array($result);
+
+        $this->assertCount(3, $counter);
     }
 
     public function testSliceOfEmptyIterableReturnsEmpty(): void

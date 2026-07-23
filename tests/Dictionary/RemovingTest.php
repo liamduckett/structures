@@ -5,6 +5,7 @@ namespace Tests\Dictionary;
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -55,6 +56,27 @@ class RemovingTest extends TestCase
             'foo' => 1,
             'bar' => 2,
         ]);
+    }
+
+    public function testRemoveIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $dictionary = new Dictionary(static function () use ($counter) {
+            foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
+                $counter->increment();
+
+                yield $key => $value;
+            }
+        });
+
+        $withoutFoo = $dictionary->remove('foo');
+
+        $this->assertCount(0, $counter);
+
+        $withoutFoo->array();
+
+        $this->assertCount(2, $counter);
     }
 
     public function testRemovedDictionaryCanBeIteratedTwice(): void

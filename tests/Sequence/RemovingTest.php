@@ -5,6 +5,7 @@ namespace Tests\Sequence;
 use Liamduckett\Structures\Sequence;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -61,19 +62,23 @@ class RemovingTest extends TestCase
 
     public function testSliceIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        $sequence = new Sequence(static function () use (&$calls) {
+        $sequence = new Sequence(static function () use ($counter) {
             foreach ([1, 2, 3] as $value) {
-                ++$calls;
+                $counter->increment();
 
                 yield $value;
             }
         });
 
-        $sequence->slice(0, 1);
+        $sliced = $sequence->slice(0, 1);
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        $sliced->array();
+
+        $this->assertCount(1, $counter);
     }
 
     public function testSlicedSequenceCanBeIteratedTwice(): void

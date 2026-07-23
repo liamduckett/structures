@@ -6,6 +6,7 @@ use Liamduckett\Structures\Dictionary;
 use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -54,6 +55,27 @@ class RetrievingTest extends TestCase
         $this->assertSequence($keys, []);
     }
 
+    public function testKeysIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $dictionary = new Dictionary(static function () use ($counter) {
+            foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
+                $counter->increment();
+
+                yield $key => $value;
+            }
+        });
+
+        $keys = $dictionary->keys();
+
+        $this->assertCount(0, $counter);
+
+        $keys->array();
+
+        $this->assertCount(2, $counter);
+    }
+
     public function testKeysSequenceCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
@@ -83,6 +105,27 @@ class RetrievingTest extends TestCase
         $values = Dictionary::make()->values();
 
         $this->assertSequence($values, []);
+    }
+
+    public function testValuesIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $dictionary = new Dictionary(static function () use ($counter) {
+            foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
+                $counter->increment();
+
+                yield $key => $value;
+            }
+        });
+
+        $values = $dictionary->values();
+
+        $this->assertCount(0, $counter);
+
+        $values->array();
+
+        $this->assertCount(2, $counter);
     }
 
     public function testValuesSequenceCanBeIteratedTwice(): void

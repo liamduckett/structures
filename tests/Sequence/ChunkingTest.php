@@ -5,6 +5,7 @@ namespace Tests\Sequence;
 use Liamduckett\Structures\Sequence;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -87,19 +88,25 @@ class ChunkingTest extends TestCase
 
     public function testChunkIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        $sequence = new Sequence(static function () use (&$calls) {
+        $sequence = new Sequence(static function () use ($counter) {
             foreach ([1, 2, 3, 4] as $value) {
-                ++$calls;
+                $counter->increment();
 
                 yield $value;
             }
         });
 
-        $sequence->chunk(2);
+        $chunked = $sequence->chunk(2);
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        foreach ($chunked as $chunk) {
+            $chunk->array();
+        }
+
+        $this->assertCount(4, $counter);
     }
 
     public function testChunkedSequenceCanBeIteratedTwice(): void

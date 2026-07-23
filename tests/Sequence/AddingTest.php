@@ -6,6 +6,7 @@ use ArrayIterator;
 use Liamduckett\Structures\Sequence;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -105,21 +106,67 @@ class AddingTest extends TestCase
         $this->assertSequence($original, [1, 2]);
     }
 
-    public function testMergeIsLazy(): void
+    public function testPushIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        $sequence = new Sequence(static function () use (&$calls) {
+        $sequence = new Sequence(static function () use ($counter) {
             foreach ([1, 2] as $value) {
-                ++$calls;
+                $counter->increment();
 
                 yield $value;
             }
         });
 
-        $sequence->merge([3, 4]);
+        $pushed = $sequence->push([3, 4]);
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        $pushed->array();
+
+        $this->assertCount(2, $counter);
+    }
+
+    public function testPrependIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $sequence = new Sequence(static function () use ($counter) {
+            foreach ([2, 3] as $value) {
+                $counter->increment();
+
+                yield $value;
+            }
+        });
+
+        $prepended = $sequence->prepend([1]);
+
+        $this->assertCount(0, $counter);
+
+        $prepended->array();
+
+        $this->assertCount(2, $counter);
+    }
+
+    public function testMergeIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $sequence = new Sequence(static function () use ($counter) {
+            foreach ([1, 2] as $value) {
+                $counter->increment();
+
+                yield $value;
+            }
+        });
+
+        $merged = $sequence->merge([3, 4]);
+
+        $this->assertCount(0, $counter);
+
+        $merged->array();
+
+        $this->assertCount(2, $counter);
     }
 
     public function testMergedSequenceCanBeIteratedTwice(): void

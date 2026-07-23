@@ -5,6 +5,7 @@ namespace Tests\Dictionary;
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -142,19 +143,25 @@ class ChunkingTest extends TestCase
 
     public function testChunkIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        $dictionary = new Dictionary(static function () use (&$calls) {
+        $dictionary = new Dictionary(static function () use ($counter) {
             foreach (['a' => 1, 'b' => 2] as $key => $value) {
-                ++$calls;
+                $counter->increment();
 
                 yield $key => $value;
             }
         });
 
-        $dictionary->chunk(1);
+        $chunked = $dictionary->chunk(1);
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        foreach ($chunked as $chunk) {
+            $chunk->array();
+        }
+
+        $this->assertCount(2, $counter);
     }
 
     public function testChunkedDictionaryCanBeIteratedTwice(): void

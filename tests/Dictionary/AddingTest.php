@@ -5,6 +5,7 @@ namespace Tests\Dictionary;
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -51,6 +52,27 @@ class AddingTest extends TestCase
         $this->assertDictionary($original, [
             'foo' => 1,
         ]);
+    }
+
+    public function testSetIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $dictionary = new Dictionary(static function () use ($counter) {
+            foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
+                $counter->increment();
+
+                yield $key => $value;
+            }
+        });
+
+        $modified = $dictionary->set('baz', 3);
+
+        $this->assertCount(0, $counter);
+
+        $modified->array();
+
+        $this->assertCount(2, $counter);
     }
 
     public function testSetDictionaryCanBeIteratedTwice(): void

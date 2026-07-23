@@ -5,6 +5,7 @@ namespace Tests\Dictionary;
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -95,19 +96,23 @@ class FilteringTest extends TestCase
 
     public function testFilterIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        $dictionary = new Dictionary(static function () use (&$calls) {
+        $dictionary = new Dictionary(static function () use ($counter) {
             foreach (['foo' => 1, 'bar' => 2] as $key => $value) {
-                ++$calls;
+                $counter->increment();
 
                 yield $key => $value;
             }
         });
 
-        $dictionary->filter(static fn (int $value) => $value > 1);
+        $filtered = $dictionary->filter(static fn (int $value) => $value > 1);
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        $filtered->array();
+
+        $this->assertCount(2, $counter);
     }
 
     public function testFilteredDictionaryCanBeIteratedTwice(): void
@@ -159,6 +164,27 @@ class FilteringTest extends TestCase
         $keys = $dictionary->search(1);
 
         $this->assertSequence($keys, ['foo']);
+    }
+
+    public function testSearchIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $dictionary = new Dictionary(static function () use ($counter) {
+            foreach (['foo' => 1, 'bar' => 2, 'baz' => 1] as $key => $value) {
+                $counter->increment();
+
+                yield $key => $value;
+            }
+        });
+
+        $keys = $dictionary->search(1);
+
+        $this->assertCount(0, $counter);
+
+        $keys->array();
+
+        $this->assertCount(3, $counter);
     }
 
     public function testSearchedSequenceCanBeIteratedTwice(): void

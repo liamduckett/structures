@@ -67,19 +67,6 @@ class FilteringTest extends TestCase
         $this->assertSame([], iterator_to_array($result));
     }
 
-    public function testFilterIsLazy(): void
-    {
-        $calls = 0;
-
-        iterable_filter([1, 2, 3], static function (int $value) use (&$calls): bool {
-            ++$calls;
-
-            return $value > 1;
-        });
-
-        $this->assertSame(0, $calls);
-    }
-
     // Search ---
 
     public function testSearchReturnsKeysOfMatchingValues(): void

@@ -5,6 +5,7 @@ namespace Tests\Sequence;
 use Liamduckett\Structures\Sequence;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsStructures;
+use Tests\Support\CallCounter;
 
 /**
  * @internal
@@ -66,15 +67,19 @@ class FilteringTest extends TestCase
 
     public function testFilterIsLazy(): void
     {
-        $calls = 0;
+        $counter = new CallCounter();
 
-        Sequence::make([1, 2, 3])->filter(static function (int $value) use (&$calls): bool {
-            ++$calls;
+        $filtered = Sequence::make([1, 2, 3])->filter(static function (int $value) use ($counter): bool {
+            $counter->increment();
 
             return $value > 1;
         });
 
-        $this->assertSame(0, $calls);
+        $this->assertCount(0, $counter);
+
+        $filtered->array();
+
+        $this->assertCount(3, $counter);
     }
 
     public function testFilteredSequenceCanBeIteratedTwice(): void
@@ -113,6 +118,27 @@ class FilteringTest extends TestCase
         $indexes = $sequence->search(1);
 
         $this->assertSequence($indexes, [0]);
+    }
+
+    public function testSearchIsLazy(): void
+    {
+        $counter = new CallCounter();
+
+        $sequence = new Sequence(static function () use ($counter) {
+            foreach ([1, 2, 1] as $value) {
+                $counter->increment();
+
+                yield $value;
+            }
+        });
+
+        $indexes = $sequence->search(1);
+
+        $this->assertCount(0, $counter);
+
+        $indexes->array();
+
+        $this->assertCount(3, $counter);
     }
 
     public function testSearchedSequenceCanBeIteratedTwice(): void
