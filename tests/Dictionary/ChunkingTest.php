@@ -156,4 +156,22 @@ class ChunkingTest extends TestCase
 
         $this->assertSame(0, $calls);
     }
+
+    public function testChunkedDictionaryCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 3,
+        ]);
+
+        $chunks = $dictionary
+            ->chunk(2)
+            ->map(static fn (Dictionary $chunk) => $chunk->array());
+
+        $this->assertIteratesTwice($chunks, [
+            ['foo' => 1, 'bar' => 2],
+            ['baz' => 3],
+        ]);
+    }
 }

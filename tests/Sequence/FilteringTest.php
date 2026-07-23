@@ -77,6 +77,15 @@ class FilteringTest extends TestCase
         $this->assertSame(0, $calls);
     }
 
+    public function testFilteredSequenceCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2, 3, 4]);
+
+        $filtered = $sequence->filter(static fn (int $value) => 0 === $value % 2);
+
+        $this->assertIteratesTwice($filtered, [2, 4]);
+    }
+
     // Search ---
 
     public function testSearchReturnsIndexesOfMatchingValues(): void
@@ -104,5 +113,14 @@ class FilteringTest extends TestCase
         $indexes = $sequence->search(1);
 
         $this->assertSequence($indexes, [0]);
+    }
+
+    public function testSearchedSequenceCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2, 1]);
+
+        $indexes = $sequence->search(1);
+
+        $this->assertIteratesTwice($indexes, [0, 2]);
     }
 }

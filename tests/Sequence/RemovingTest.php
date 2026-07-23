@@ -75,4 +75,11 @@ class RemovingTest extends TestCase
 
         $this->assertSame(0, $calls);
     }
+
+    public function testSlicedSequenceCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2, 3, 4])->slice(1, 2);
+
+        $this->assertIteratesTwice($sequence, [2, 3]);
+    }
 }

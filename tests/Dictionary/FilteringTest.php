@@ -110,6 +110,18 @@ class FilteringTest extends TestCase
         $this->assertSame(0, $calls);
     }
 
+    public function testFilteredDictionaryCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $filtered = $dictionary->filter(static fn (int $value) => 0 === $value % 2);
+
+        $this->assertIteratesTwice($filtered, ['bar' => 2]);
+    }
+
     // search ---
 
     public function testSearchReturnsAllMatchingKeys(): void
@@ -147,5 +159,18 @@ class FilteringTest extends TestCase
         $keys = $dictionary->search(1);
 
         $this->assertSequence($keys, ['foo']);
+    }
+
+    public function testSearchedSequenceCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 1,
+        ]);
+
+        $keys = $dictionary->search(1);
+
+        $this->assertIteratesTwice($keys, ['foo', 'baz']);
     }
 }

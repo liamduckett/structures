@@ -56,4 +56,16 @@ class RemovingTest extends TestCase
             'bar' => 2,
         ]);
     }
+
+    public function testRemovedDictionaryCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $withoutFoo = $dictionary->remove('foo');
+
+        $this->assertIteratesTwice($withoutFoo, ['bar' => 2]);
+    }
 }

@@ -52,4 +52,14 @@ class AddingTest extends TestCase
             'foo' => 1,
         ]);
     }
+
+    public function testSetDictionaryCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make(['foo' => 1])->set('bar', 2);
+
+        $this->assertIteratesTwice($dictionary, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+    }
 }

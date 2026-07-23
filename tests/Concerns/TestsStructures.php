@@ -78,6 +78,31 @@ trait TestsStructures
     }
 
     /**
+     * @template TKey of array-key
+     * @template T of mixed
+     *
+     * @param iterable<TKey, T> $iterable
+     * @param array<TKey, T>    $expected
+     */
+    protected function assertIteratesTwice(iterable $iterable, array $expected): void
+    {
+        $first = [];
+
+        foreach ($iterable as $key => $value) {
+            $first[$key] = $value;
+        }
+
+        $second = [];
+
+        foreach ($iterable as $key => $value) {
+            $second[$key] = $value;
+        }
+
+        $this->assertSame($expected, $first);
+        $this->assertSame($expected, $second);
+    }
+
+    /**
      *  Used to work around a static analysis limitation.
      *
      * @see https://github.com/phpstan/phpstan/issues/10289

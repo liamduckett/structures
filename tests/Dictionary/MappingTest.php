@@ -93,4 +93,19 @@ class MappingTest extends TestCase
 
         $this->assertSame(0, $calls);
     }
+
+    public function testMappedDictionaryCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $mapped = $dictionary->map(static fn (int $value) => $value * 2);
+
+        $this->assertIteratesTwice($mapped, [
+            'foo' => 2,
+            'bar' => 4,
+        ]);
+    }
 }

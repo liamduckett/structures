@@ -54,6 +54,18 @@ class RetrievingTest extends TestCase
         $this->assertSequence($keys, []);
     }
 
+    public function testKeysSequenceCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $keys = $dictionary->keys();
+
+        $this->assertIteratesTwice($keys, ['foo', 'bar']);
+    }
+
     // values ---
 
     public function testValuesStripsStringKeys(): void
@@ -71,5 +83,17 @@ class RetrievingTest extends TestCase
         $values = Dictionary::make()->values();
 
         $this->assertSequence($values, []);
+    }
+
+    public function testValuesSequenceCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $values = $dictionary->values();
+
+        $this->assertIteratesTwice($values, [1, 2]);
     }
 }

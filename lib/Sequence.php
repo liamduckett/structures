@@ -74,7 +74,9 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function merge(iterable $items): static
     {
-        return new self(iterable_merge($this->iterator(), $items));
+        return new self(function () use ($items): Generator {
+            yield from iterable_merge($this->iterator(), $items);
+        });
     }
 
     // Chunking ---
@@ -151,7 +153,9 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function filter(callable $callable): static
     {
-        return new self(iterable_filter($this->iterator(), $callable));
+        return new self(function () use ($callable): Generator {
+            yield from iterable_filter($this->iterator(), $callable);
+        });
     }
 
     /**
@@ -161,7 +165,9 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function search(mixed $value): self
     {
-        return new self(iterable_search($this->iterator(), $value));
+        return new self(function () use ($value): Generator {
+            yield from iterable_search($this->iterator(), $value);
+        });
     }
 
     // Mapping ---
@@ -175,7 +181,9 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function map(callable $callable): self
     {
-        return new self(iterable_map($this->iterator(), $callable));
+        return new self(function () use ($callable): Generator {
+            yield from iterable_map($this->iterator(), $callable);
+        });
     }
 
     // Removing ---
@@ -186,7 +194,9 @@ final class Sequence implements Countable, IteratorAggregate
      */
     public function slice(int $offset, ?int $length = null): static
     {
-        return new self(iterable_slice($this->iterator(), $offset, $length));
+        return new self(function () use ($offset, $length): Generator {
+            yield from iterable_slice($this->iterator(), $offset, $length);
+        });
     }
 
     // Retrieving ---

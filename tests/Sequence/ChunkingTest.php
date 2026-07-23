@@ -101,4 +101,18 @@ class ChunkingTest extends TestCase
 
         $this->assertSame(0, $calls);
     }
+
+    public function testChunkedSequenceCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2, 3]);
+
+        $chunks = $sequence
+            ->chunk(2)
+            ->map(static fn (Sequence $chunk) => $chunk->array());
+
+        $this->assertIteratesTwice($chunks, [
+            [1, 2],
+            [3],
+        ]);
+    }
 }

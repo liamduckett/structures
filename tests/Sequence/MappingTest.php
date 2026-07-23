@@ -67,4 +67,13 @@ class MappingTest extends TestCase
 
         $this->assertSame(0, $calls);
     }
+
+    public function testMappedSequenceCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2, 3]);
+
+        $mapped = $sequence->map(static fn (int $value) => $value * 2);
+
+        $this->assertIteratesTwice($mapped, [2, 4, 6]);
+    }
 }

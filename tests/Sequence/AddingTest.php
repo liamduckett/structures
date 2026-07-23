@@ -71,6 +71,13 @@ class AddingTest extends TestCase
         $this->assertSequence($original, [2, 3]);
     }
 
+    public function testPrependedSequenceCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([3, 4])->prepend([1, 2]);
+
+        $this->assertIteratesTwice($sequence, [1, 2, 3, 4]);
+    }
+
     // Merge ---
 
     public function testMergeCombinesTwoSequences(): void
@@ -113,5 +120,12 @@ class AddingTest extends TestCase
         $sequence->merge([3, 4]);
 
         $this->assertSame(0, $calls);
+    }
+
+    public function testMergedSequenceCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2])->merge([3, 4]);
+
+        $this->assertIteratesTwice($sequence, [1, 2, 3, 4]);
     }
 }
