@@ -17,21 +17,21 @@ class FilteringTest extends TestCase
 {
     // Filter ---
 
-    public function testFilterAnArray(): void
+    public function testFilterAcceptsArrays(): void
     {
         $result = iterable_filter([1, 2, 3, 4], static fn (int $value) => $value > 2);
 
         $this->assertSame([2 => 3, 3 => 4], iterator_to_array($result));
     }
 
-    public function testFilterAnIterable(): void
+    public function testFilterAcceptsIterables(): void
     {
         $result = iterable_filter(new ArrayIterator([1, 2, 3, 4]), static fn (int $value) => $value > 2);
 
         $this->assertSame([2 => 3, 3 => 4], iterator_to_array($result));
     }
 
-    public function testFilterAGenerator(): void
+    public function testFilterAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;

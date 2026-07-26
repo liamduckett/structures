@@ -17,7 +17,7 @@ class ContainingTest extends TestCase
 
     // ContainsKey ---
 
-    public function testContainsKeyReturnsTrueForAnExistingKey(): void
+    public function testContainsKeyReturnsTrueForExistingKey(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -26,7 +26,7 @@ class ContainingTest extends TestCase
         $this->assertTrue($containsKey);
     }
 
-    public function testContainsKeyReturnsFalseForAMissingKey(): void
+    public function testContainsKeyReturnsFalseForMissingKey(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -35,7 +35,7 @@ class ContainingTest extends TestCase
         $this->assertFalse($containsKey);
     }
 
-    public function testContainsKeyReturnsTrueForAKeyHoldingNull(): void
+    public function testContainsKeyReturnsTrueForKeyHoldingNull(): void
     {
         $dictionary = Dictionary::make(['foo' => null]);
 
@@ -46,7 +46,7 @@ class ContainingTest extends TestCase
 
     // ContainsValue ---
 
-    public function testContainsValueReturnsTrueForAnExistingValue(): void
+    public function testContainsValueReturnsTrueForExistingValue(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -55,7 +55,7 @@ class ContainingTest extends TestCase
         $this->assertTrue($containsValue);
     }
 
-    public function testContainsValueReturnsFalseForAMissingValue(): void
+    public function testContainsValueReturnsFalseForMissingValue(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -75,7 +75,7 @@ class ContainingTest extends TestCase
 
     // DoesntContainKey ---
 
-    public function testDoesntContainKeyReturnsFalseForAnExistingKey(): void
+    public function testDoesntContainKeyReturnsFalseForExistingKey(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -84,7 +84,7 @@ class ContainingTest extends TestCase
         $this->assertFalse($doesntContainKey);
     }
 
-    public function testDoesntContainKeyReturnsTrueForAMissingKey(): void
+    public function testDoesntContainKeyReturnsTrueForMissingKey(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -95,7 +95,7 @@ class ContainingTest extends TestCase
 
     // DoesntContainValue ---
 
-    public function testDoesntContainValueReturnsFalseForAnExistingValue(): void
+    public function testDoesntContainValueReturnsFalseForExistingValue(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -104,7 +104,7 @@ class ContainingTest extends TestCase
         $this->assertFalse($doesntContainValue);
     }
 
-    public function testDoesntContainValueReturnsTrueForAMissingValue(): void
+    public function testDoesntContainValueReturnsTrueForMissingValue(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -115,7 +115,7 @@ class ContainingTest extends TestCase
 
     // IsEmpty ---
 
-    public function testIsEmptyReturnsTrueForAnEmptyDictionary(): void
+    public function testIsEmptyReturnsTrueForEmptyDictionary(): void
     {
         $dictionary = Dictionary::make();
 
@@ -124,7 +124,7 @@ class ContainingTest extends TestCase
         $this->assertTrue($isEmpty);
     }
 
-    public function testIsEmptyReturnsFalseForANonEmptyDictionary(): void
+    public function testIsEmptyReturnsFalseForNonEmptyDictionary(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -135,7 +135,7 @@ class ContainingTest extends TestCase
 
     // IsNotEmpty ---
 
-    public function testIsNotEmptyReturnsTrueForANonEmptyDictionary(): void
+    public function testIsNotEmptyReturnsTrueForNonEmptyDictionary(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -144,7 +144,7 @@ class ContainingTest extends TestCase
         $this->assertTrue($isNotEmpty);
     }
 
-    public function testIsNotEmptyReturnsFalseForAnEmptyDictionary(): void
+    public function testIsNotEmptyReturnsFalseForEmptyDictionary(): void
     {
         $dictionary = Dictionary::make();
 

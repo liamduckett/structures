@@ -25,7 +25,7 @@ class RetrievingTest extends TestCase
 {
     // Values ---
 
-    public function testValuesOfAnArray(): void
+    public function testValuesAcceptsArrays(): void
     {
         $result = iterable_values([10, 20, 30]);
 
@@ -39,14 +39,14 @@ class RetrievingTest extends TestCase
         $this->assertSame([1, 2, 3], iterator_to_array($result));
     }
 
-    public function testValuesOfAnIterable(): void
+    public function testValuesAcceptsIterables(): void
     {
         $result = iterable_values(new ArrayIterator([1, 2, 3]));
 
         $this->assertSame([1, 2, 3], iterator_to_array($result));
     }
 
-    public function testValuesOfAGenerator(): void
+    public function testValuesAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 'x' => 1;
@@ -70,14 +70,14 @@ class RetrievingTest extends TestCase
 
     // Keys ---
 
-    public function testKeysOfAnIntKeyedArray(): void
+    public function testKeysAcceptsIntKeyedArrays(): void
     {
         $result = iterable_keys([10, 20, 30]);
 
         $this->assertSame([0, 1, 2], iterator_to_array($result));
     }
 
-    public function testKeysOfAStringKeyedArray(): void
+    public function testKeysAcceptsStringKeyedArrays(): void
     {
         $result = iterable_keys(['a' => 1, 'b' => 2, 'c' => 3]);
 
@@ -91,14 +91,14 @@ class RetrievingTest extends TestCase
         $this->assertSame(['x', 'y'], iterator_to_array($result));
     }
 
-    public function testKeysOfAnIterable(): void
+    public function testKeysAcceptsIterables(): void
     {
         $result = iterable_keys(new ArrayIterator(['a' => 1, 'b' => 2]));
 
         $this->assertSame(['a', 'b'], iterator_to_array($result));
     }
 
-    public function testKeysOfAGenerator(): void
+    public function testKeysAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 'foo' => 1;
@@ -111,7 +111,7 @@ class RetrievingTest extends TestCase
         $this->assertSame(['foo', 'bar'], iterator_to_array($result));
     }
 
-    public function testKeysOfEmptyIterable(): void
+    public function testKeysReturnsEmptyForEmptyIterable(): void
     {
         $result = iterable_keys([]);
 
@@ -120,22 +120,22 @@ class RetrievingTest extends TestCase
 
     // Count ---
 
-    public function testCountOfAnArray(): void
+    public function testCountAcceptsArrays(): void
     {
         $this->assertSame(3, iterable_count([1, 2, 3]));
     }
 
-    public function testCountOfAnEmptyArray(): void
+    public function testCountReturnsZeroForEmptyArray(): void
     {
         $this->assertSame(0, iterable_count([]));
     }
 
-    public function testCountOfAnIterable(): void
+    public function testCountAcceptsIterables(): void
     {
         $this->assertSame(3, iterable_count(new ArrayIterator([1, 2, 3])));
     }
 
-    public function testCountOfAGenerator(): void
+    public function testCountAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;
@@ -148,7 +148,7 @@ class RetrievingTest extends TestCase
         $this->assertSame(3, iterable_count($generator));
     }
 
-    public function testCountOfEmptyIterable(): void
+    public function testCountReturnsZeroForEmptyIterable(): void
     {
         $this->assertSame(0, iterable_count(new ArrayIterator([])));
     }
@@ -172,7 +172,7 @@ class RetrievingTest extends TestCase
 
     // Get ---
 
-    public function testGetReturnsItemAtIndexFromArray(): void
+    public function testGetReturnsItemAtIndex(): void
     {
         $this->assertSame(20, iterable_get([10, 20, 30], 1));
     }
@@ -187,12 +187,12 @@ class RetrievingTest extends TestCase
         $this->assertSame(30, iterable_get([10, 20, 30], 2));
     }
 
-    public function testGetFromIterable(): void
+    public function testGetAcceptsIterables(): void
     {
         $this->assertSame(20, iterable_get(new ArrayIterator([10, 20, 30]), 1));
     }
 
-    public function testGetFromGenerator(): void
+    public function testGetAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 10;
@@ -236,7 +236,7 @@ class RetrievingTest extends TestCase
         iterable_get(['a' => 1, 'b' => 2], 'z');
     }
 
-    public function testGetUsesStrictKeyComparison(): void
+    public function testGetUsesStrictComparison(): void
     {
         $this->expectException(OffsetDoesntExistException::class);
 
@@ -245,24 +245,24 @@ class RetrievingTest extends TestCase
 
     // First ---
 
-    public function testFirstReturnsFirstItemFromArray(): void
+    public function testFirstReturnsFirstItem(): void
     {
         $this->assertSame(10, iterable_first([10, 20, 30]));
     }
 
-    public function testFirstReturnsSingleItemArray(): void
+    public function testFirstReturnsOnlyItemOfSingleItemArray(): void
     {
         /** @var list<int> $items */
         $items = [42];
         $this->assertSame(42, iterable_first($items));
     }
 
-    public function testFirstFromIterable(): void
+    public function testFirstAcceptsIterables(): void
     {
         $this->assertSame(10, iterable_first(new ArrayIterator([10, 20, 30])));
     }
 
-    public function testFirstFromGenerator(): void
+    public function testFirstAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 10;
@@ -291,24 +291,24 @@ class RetrievingTest extends TestCase
 
     // Last ---
 
-    public function testLastReturnsLastItemFromArray(): void
+    public function testLastReturnsLastItem(): void
     {
         $this->assertSame(30, iterable_last([10, 20, 30]));
     }
 
-    public function testLastReturnsSingleItemArray(): void
+    public function testLastReturnsOnlyItemOfSingleItemArray(): void
     {
         /** @var list<int> $items */
         $items = [42];
         $this->assertSame(42, iterable_last($items));
     }
 
-    public function testLastFromIterable(): void
+    public function testLastAcceptsIterables(): void
     {
         $this->assertSame(30, iterable_last(new ArrayIterator([10, 20, 30])));
     }
 
-    public function testLastFromGenerator(): void
+    public function testLastAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 10;

@@ -19,7 +19,7 @@ class RetrievingTest extends TestCase
 
     // get ---
 
-    public function testGetReturnsTheValueForAnExistingKey(): void
+    public function testGetReturnsTheValueForExistingKey(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,
@@ -29,7 +29,7 @@ class RetrievingTest extends TestCase
         $this->assertSame(1, $dictionary->get('foo'));
     }
 
-    public function testGetThrowsForAMissingKey(): void
+    public function testGetThrowsForMissingKey(): void
     {
         $this->expectException(OffsetDoesntExistException::class);
 
@@ -48,7 +48,7 @@ class RetrievingTest extends TestCase
         $this->assertSequence($dictionary->keys(), ['foo', 'bar']);
     }
 
-    public function testKeysReturnsEmptyForAnEmptyDictionary(): void
+    public function testKeysReturnsEmptyForEmptyDictionary(): void
     {
         $keys = Dictionary::make()->keys();
 
@@ -76,7 +76,7 @@ class RetrievingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testKeysSequenceCanBeIteratedTwice(): void
+    public function testKeysCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,
@@ -100,7 +100,7 @@ class RetrievingTest extends TestCase
         $this->assertSequence($dictionary->values(), [1, 2]);
     }
 
-    public function testValuesReturnsEmptyForAnEmptyDictionary(): void
+    public function testValuesReturnsEmptyForEmptyDictionary(): void
     {
         $values = Dictionary::make()->values();
 
@@ -128,7 +128,7 @@ class RetrievingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testValuesSequenceCanBeIteratedTwice(): void
+    public function testValuesCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,

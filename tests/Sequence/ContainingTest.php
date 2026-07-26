@@ -17,7 +17,7 @@ class ContainingTest extends TestCase
 
     // Contains ---
 
-    public function testContainsReturnsTrueForAnExistingValue(): void
+    public function testContainsReturnsTrueForExistingValue(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 
@@ -26,7 +26,7 @@ class ContainingTest extends TestCase
         $this->assertTrue($contains);
     }
 
-    public function testContainsReturnsFalseForAMissingValue(): void
+    public function testContainsReturnsFalseForMissingValue(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 
@@ -46,7 +46,7 @@ class ContainingTest extends TestCase
 
     // DoesntContain ---
 
-    public function testDoesntContainReturnsFalseForAnExistingValue(): void
+    public function testDoesntContainReturnsFalseForExistingValue(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 
@@ -55,7 +55,7 @@ class ContainingTest extends TestCase
         $this->assertFalse($doesntContain);
     }
 
-    public function testDoesntContainReturnsTrueForAMissingValue(): void
+    public function testDoesntContainReturnsTrueForMissingValue(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 
@@ -66,7 +66,7 @@ class ContainingTest extends TestCase
 
     // IsEmpty ---
 
-    public function testIsEmptyReturnsTrueForAnEmptySequence(): void
+    public function testIsEmptyReturnsTrueForEmptySequence(): void
     {
         $sequence = Sequence::make();
 
@@ -75,7 +75,7 @@ class ContainingTest extends TestCase
         $this->assertTrue($isEmpty);
     }
 
-    public function testIsEmptyReturnsFalseForANonEmptySequence(): void
+    public function testIsEmptyReturnsFalseForNonEmptySequence(): void
     {
         $sequence = Sequence::make([1]);
 
@@ -86,7 +86,7 @@ class ContainingTest extends TestCase
 
     // IsNotEmpty ---
 
-    public function testIsNotEmptyReturnsTrueForANonEmptySequence(): void
+    public function testIsNotEmptyReturnsTrueForNonEmptySequence(): void
     {
         $sequence = Sequence::make([1]);
 
@@ -95,7 +95,7 @@ class ContainingTest extends TestCase
         $this->assertTrue($isNotEmpty);
     }
 
-    public function testIsNotEmptyReturnsFalseForAnEmptySequence(): void
+    public function testIsNotEmptyReturnsFalseForEmptySequence(): void
     {
         $sequence = Sequence::make();
 

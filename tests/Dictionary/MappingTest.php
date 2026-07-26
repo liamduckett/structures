@@ -99,7 +99,7 @@ class MappingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testMappedDictionaryCanBeIteratedTwice(): void
+    public function testMapCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,

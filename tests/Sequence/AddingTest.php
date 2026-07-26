@@ -26,7 +26,7 @@ class AddingTest extends TestCase
         $this->assertSequence($sequence, [1, 2, 3, 4]);
     }
 
-    public function testPushAcceptsAnIterable(): void
+    public function testPushAcceptsIterables(): void
     {
         $sequence = Sequence::make([1, 2])
             ->push(new ArrayIterator([3, 4]));
@@ -41,67 +41,6 @@ class AddingTest extends TestCase
         $modified = $original->push([3]);
 
         $this->assertNotSame($original, $modified);
-
-        $this->assertSequence($original, [1, 2]);
-    }
-
-    // Prepend ---
-
-    public function testPrependAddsItemsToFront(): void
-    {
-        $sequence = Sequence::make([3, 4])->prepend([1, 2]);
-
-        $this->assertSequence($sequence, [1, 2, 3, 4]);
-    }
-
-    public function testPrependAcceptsAnIterable(): void
-    {
-        $sequence = Sequence::make([3, 4])->prepend(new ArrayIterator([1, 2]));
-
-        $this->assertSequence($sequence, [1, 2, 3, 4]);
-    }
-
-    public function testPrependIsImmutable(): void
-    {
-        $original = Sequence::make([2, 3]);
-
-        $modified = $original->prepend([1]);
-
-        $this->assertNotSame($original, $modified);
-
-        $this->assertSequence($original, [2, 3]);
-    }
-
-    public function testPrependedSequenceCanBeIteratedTwice(): void
-    {
-        $sequence = Sequence::make([3, 4])->prepend([1, 2]);
-
-        $this->assertIteratesTwice($sequence, [1, 2, 3, 4]);
-    }
-
-    // Merge ---
-
-    public function testMergeCombinesTwoSequences(): void
-    {
-        $sequence = Sequence::make([1, 2])->merge([3, 4]);
-
-        $this->assertSequence($sequence, [1, 2, 3, 4]);
-    }
-
-    public function testMergeAcceptsAnIterable(): void
-    {
-        $sequence = Sequence::make([1, 2])->merge(new ArrayIterator([3, 4]));
-
-        $this->assertSequence($sequence, [1, 2, 3, 4]);
-    }
-
-    public function testMergeIsImmutable(): void
-    {
-        $original = Sequence::make([1, 2]);
-
-        $merged = $original->merge([3, 4]);
-
-        $this->assertNotSame($original, $merged);
 
         $this->assertSequence($original, [1, 2]);
     }
@@ -127,6 +66,40 @@ class AddingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
+    public function testPushCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2])->push([3, 4]);
+
+        $this->assertIteratesTwice($sequence, [1, 2, 3, 4]);
+    }
+
+    // Prepend ---
+
+    public function testPrependAddsItemsToFront(): void
+    {
+        $sequence = Sequence::make([3, 4])->prepend([1, 2]);
+
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
+    }
+
+    public function testPrependAcceptsIterables(): void
+    {
+        $sequence = Sequence::make([3, 4])->prepend(new ArrayIterator([1, 2]));
+
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
+    }
+
+    public function testPrependIsImmutable(): void
+    {
+        $original = Sequence::make([2, 3]);
+
+        $modified = $original->prepend([1]);
+
+        $this->assertNotSame($original, $modified);
+
+        $this->assertSequence($original, [2, 3]);
+    }
+
     public function testPrependIsLazy(): void
     {
         $counter = new CallCounter();
@@ -146,6 +119,40 @@ class AddingTest extends TestCase
         $prepended->array();
 
         $this->assertCount(2, $counter);
+    }
+
+    public function testPrependCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([3, 4])->prepend([1, 2]);
+
+        $this->assertIteratesTwice($sequence, [1, 2, 3, 4]);
+    }
+
+    // Merge ---
+
+    public function testMergeCombinesTwoSequences(): void
+    {
+        $sequence = Sequence::make([1, 2])->merge([3, 4]);
+
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
+    }
+
+    public function testMergeAcceptsIterables(): void
+    {
+        $sequence = Sequence::make([1, 2])->merge(new ArrayIterator([3, 4]));
+
+        $this->assertSequence($sequence, [1, 2, 3, 4]);
+    }
+
+    public function testMergeIsImmutable(): void
+    {
+        $original = Sequence::make([1, 2]);
+
+        $merged = $original->merge([3, 4]);
+
+        $this->assertNotSame($original, $merged);
+
+        $this->assertSequence($original, [1, 2]);
     }
 
     public function testMergeIsLazy(): void
@@ -169,7 +176,7 @@ class AddingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testMergedSequenceCanBeIteratedTwice(): void
+    public function testMergeCanBeIteratedTwice(): void
     {
         $sequence = Sequence::make([1, 2])->merge([3, 4]);
 

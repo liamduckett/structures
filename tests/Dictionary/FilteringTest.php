@@ -18,7 +18,7 @@ class FilteringTest extends TestCase
 
     // filter ---
 
-    public function testFilterByValue(): void
+    public function testFilterPassesValueToCallable(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,
@@ -34,7 +34,7 @@ class FilteringTest extends TestCase
         ]);
     }
 
-    public function testFilterByKey(): void
+    public function testFilterPassesKeyToCallable(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,
@@ -115,7 +115,7 @@ class FilteringTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testFilteredDictionaryCanBeIteratedTwice(): void
+    public function testFilterCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,
@@ -187,7 +187,7 @@ class FilteringTest extends TestCase
         $this->assertCount(3, $counter);
     }
 
-    public function testSearchedSequenceCanBeIteratedTwice(): void
+    public function testSearchCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,

@@ -96,7 +96,7 @@ class ChunkingTest extends TestCase
         $this->assertSame([1, 2], $values);
     }
 
-    public function testChunkWithSizeEqualToLength(): void
+    public function testChunkWithSizeEqualToLengthYieldsOneChunk(): void
     {
         $dictionary = Dictionary::make([
             'a' => 1,
@@ -111,7 +111,7 @@ class ChunkingTest extends TestCase
         ]);
     }
 
-    public function testChunkWithSizeGreaterThanLength(): void
+    public function testChunkWithSizeGreaterThanLengthYieldsOneChunk(): void
     {
         $dictionary = Dictionary::make(['a' => 1, 'b' => 2]);
 
@@ -164,7 +164,7 @@ class ChunkingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testChunkedDictionaryCanBeIteratedTwice(): void
+    public function testChunkCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,

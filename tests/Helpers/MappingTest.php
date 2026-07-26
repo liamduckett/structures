@@ -16,21 +16,21 @@ class MappingTest extends TestCase
 {
     // Map ---
 
-    public function testMapOverAnArray(): void
+    public function testMapAcceptsArrays(): void
     {
         $result = iterable_map([1, 2, 3], static fn (int $value) => $value * 2);
 
         $this->assertSame([0 => 2, 1 => 4, 2 => 6], iterator_to_array($result));
     }
 
-    public function testMapOverAnIterable(): void
+    public function testMapAcceptsIterables(): void
     {
         $result = iterable_map(new ArrayIterator([1, 2, 3]), static fn (int $value) => $value * 2);
 
         $this->assertSame([0 => 2, 1 => 4, 2 => 6], iterator_to_array($result));
     }
 
-    public function testMapOverAGenerator(): void
+    public function testMapAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;

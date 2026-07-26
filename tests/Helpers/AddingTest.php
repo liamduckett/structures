@@ -17,28 +17,28 @@ class AddingTest extends TestCase
 {
     // Merge ---
 
-    public function testMergeTwoArrays(): void
+    public function testMergeCombinesTwoArrays(): void
     {
         $result = iterable_merge([1, 2], [3, 4]);
 
         $this->assertSame([1, 2, 3, 4], iterator_to_array($result, false));
     }
 
-    public function testMergeThreeArrays(): void
+    public function testMergeCombinesThreeArrays(): void
     {
         $result = iterable_merge([1], [2], [3]);
 
         $this->assertSame([1, 2, 3], iterator_to_array($result, false));
     }
 
-    public function testMergeWithIterable(): void
+    public function testMergeAcceptsIterables(): void
     {
         $result = iterable_merge([1, 2], new ArrayIterator([3, 4]));
 
         $this->assertSame([1, 2, 3, 4], iterator_to_array($result, false));
     }
 
-    public function testMergeWithGenerator(): void
+    public function testMergeAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 3;
@@ -58,14 +58,14 @@ class AddingTest extends TestCase
         $this->assertSame(['a' => 1, 'b' => 2], iterator_to_array($result));
     }
 
-    public function testMergeWithSingleIterable(): void
+    public function testMergeCombinesSingleIterable(): void
     {
         $result = iterable_merge([1, 2, 3]);
 
         $this->assertSame([1, 2, 3], iterator_to_array($result, false));
     }
 
-    public function testMergeWithEmptyIterables(): void
+    public function testMergeReturnsEmptyForEmptyIterables(): void
     {
         $result = iterable_merge([], []);
 
@@ -74,28 +74,28 @@ class AddingTest extends TestCase
 
     // Set ---
 
-    public function testSetAppendsANewKey(): void
+    public function testSetAppendsNewKey(): void
     {
         $result = iterable_set(['foo' => 1], 'bar', 2);
 
         $this->assertSame(['foo' => 1, 'bar' => 2], iterator_to_array($result));
     }
 
-    public function testSetUpdatesAnExistingKeyInPlace(): void
+    public function testSetUpdatesExistingKeyInPlace(): void
     {
         $result = iterable_set(['foo' => 1, 'bar' => 2], 'foo', 99);
 
         $this->assertSame(['foo' => 99, 'bar' => 2], iterator_to_array($result));
     }
 
-    public function testSetAppendsToAnEmptyIterable(): void
+    public function testSetAppendsToEmptyIterable(): void
     {
         $result = iterable_set([], 'foo', 1);
 
         $this->assertSame(['foo' => 1], iterator_to_array($result));
     }
 
-    public function testSetWorksWithAnIterable(): void
+    public function testSetAcceptsIterables(): void
     {
         $result = iterable_set(new ArrayIterator(['foo' => 1]), 'bar', 2);
 

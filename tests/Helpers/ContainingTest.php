@@ -18,22 +18,22 @@ class ContainingTest extends TestCase
 {
     // Contains ---
 
-    public function testContainsAnItemInAnArray(): void
+    public function testContainsReturnsTrueForExistingItem(): void
     {
         $this->assertTrue(iterable_contains([1, 2, 3], 2));
     }
 
-    public function testDoesNotContainMissingItemInArray(): void
+    public function testContainsReturnsFalseForMissingItem(): void
     {
         $this->assertFalse(iterable_contains([1, 2, 3], 99));
     }
 
-    public function testContainsAnItemInAnIterable(): void
+    public function testContainsAcceptsIterables(): void
     {
         $this->assertTrue(iterable_contains(new ArrayIterator([1, 2, 3]), 2));
     }
 
-    public function testContainsAnItemInAGenerator(): void
+    public function testContainsAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;
@@ -46,7 +46,7 @@ class ContainingTest extends TestCase
         $this->assertTrue(iterable_contains($generator, 2));
     }
 
-    public function testContainsUsesStrictEquality(): void
+    public function testContainsUsesStrictComparison(): void
     {
         $this->assertFalse(iterable_contains([1, 2, 3], '1'));
         $this->assertFalse(iterable_contains([1, 2, 3], true));
@@ -59,27 +59,27 @@ class ContainingTest extends TestCase
 
     // Contains Key ---
 
-    public function testContainsKeyInAnArray(): void
+    public function testContainsKeyReturnsTrueForExistingKey(): void
     {
         $this->assertTrue(iterable_contains_key(['a' => 1, 'b' => 2], 'a'));
     }
 
-    public function testDoesNotContainMissingKeyInArray(): void
+    public function testContainsKeyReturnsFalseForMissingKey(): void
     {
         $this->assertFalse(iterable_contains_key(['a' => 1, 'b' => 2], 'z'));
     }
 
-    public function testContainsIntKeyInAnArray(): void
+    public function testContainsKeyReturnsTrueForExistingIntKey(): void
     {
         $this->assertTrue(iterable_contains_key([10, 20, 30], 1));
     }
 
-    public function testContainsKeyInAnIterable(): void
+    public function testContainsKeyAcceptsIterables(): void
     {
         $this->assertTrue(iterable_contains_key(new ArrayIterator(['a' => 1, 'b' => 2]), 'b'));
     }
 
-    public function testContainsKeyInAGenerator(): void
+    public function testContainsKeyAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 'foo' => 1;
@@ -90,7 +90,7 @@ class ContainingTest extends TestCase
         $this->assertTrue(iterable_contains_key($generator, 'foo'));
     }
 
-    public function testContainsKeyUsesStrictKeyComparison(): void
+    public function testContainsKeyUsesStrictComparison(): void
     {
         $this->assertFalse(iterable_contains_key([1, 2, 3], '0'));
     }

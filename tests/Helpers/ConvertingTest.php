@@ -18,7 +18,7 @@ class ConvertingTest extends TestCase
 {
     // Value ---
 
-    public function testValueReturnsAnIterable(): void
+    public function testValueReturnsIterablesUnchanged(): void
     {
         /** @var list<int> $array */
         $array = [1, 2, 3];
@@ -28,7 +28,7 @@ class ConvertingTest extends TestCase
         $this->assertSame([1, 2, 3], $result);
     }
 
-    public function testValueCallsAClosure(): void
+    public function testValueCallsClosures(): void
     {
         /** @var list<int> $array */
         $array = [1, 2, 3];
@@ -38,7 +38,7 @@ class ConvertingTest extends TestCase
         $this->assertSame([1, 2, 3], $result);
     }
 
-    public function testValueAcceptsAGenerator(): void
+    public function testValueAcceptsGenerators(): void
     {
         $result = value((static function () {
             yield 1;
@@ -49,7 +49,7 @@ class ConvertingTest extends TestCase
         $this->assertSame([1, 2], iterator_to_array($result));
     }
 
-    public function testValueAcceptsAGeneratorFunction(): void
+    public function testValueAcceptsGeneratorFunctions(): void
     {
         $result = value(static function () {
             yield 1;
@@ -60,7 +60,7 @@ class ConvertingTest extends TestCase
         $this->assertSame([1, 2], iterator_to_array($result));
     }
 
-    public function testValueAcceptsAnIterable(): void
+    public function testValueAcceptsIterables(): void
     {
         $result = value(new ArrayIterator([1, 2, 3]));
 
@@ -69,21 +69,21 @@ class ConvertingTest extends TestCase
 
     // To Array ---
 
-    public function testConvertsAnArray(): void
+    public function testToArrayAcceptsArrays(): void
     {
         $result = iterable_to_array([1, 2, 3]);
 
         $this->assertSame([1, 2, 3], $result);
     }
 
-    public function testConvertsAnIterable(): void
+    public function testToArrayAcceptsIterables(): void
     {
         $result = iterable_to_array(new ArrayIterator([1, 2, 3]));
 
         $this->assertSame([1, 2, 3], $result);
     }
 
-    public function testConvertsAGenerator(): void
+    public function testToArrayAcceptsGenerators(): void
     {
         $result = iterable_to_array((static function () {
             yield 'a' => 1;
@@ -94,21 +94,21 @@ class ConvertingTest extends TestCase
         $this->assertSame(['a' => 1, 'b' => 2], $result);
     }
 
-    public function testPreservesKeys(): void
+    public function testToArrayPreservesKeys(): void
     {
         $result = iterable_to_array(['a' => 1, 'b' => 2]);
 
         $this->assertSame(['a' => 1, 'b' => 2], $result);
     }
 
-    public function testConvertsAnEmptyArray(): void
+    public function testToArrayReturnsEmptyForEmptyArray(): void
     {
         $result = iterable_to_array([]);
 
         $this->assertSame([], $result); // @phpstan-ignore method.alreadyNarrowedType
     }
 
-    public function testConvertsAnEmptyGenerator(): void
+    public function testToArrayReturnsEmptyForEmptyGenerator(): void
     {
         $result = iterable_to_array((static function () {
             yield from [];
@@ -119,21 +119,21 @@ class ConvertingTest extends TestCase
 
     // To Generator ---
 
-    public function testIterableToGeneratorFromArray(): void
+    public function testToGeneratorAcceptsArrays(): void
     {
         $result = iterable_to_generator([1, 2, 3]);
 
         $this->assertSame([0 => 1, 1 => 2, 2 => 3], iterator_to_array($result));
     }
 
-    public function testIterableToGeneratorFromIterable(): void
+    public function testToGeneratorAcceptsIterables(): void
     {
         $result = iterable_to_generator(new ArrayIterator([1, 2, 3]));
 
         $this->assertSame([0 => 1, 1 => 2, 2 => 3], iterator_to_array($result));
     }
 
-    public function testIterableToGeneratorFromGenerator(): void
+    public function testToGeneratorAcceptsGenerators(): void
     {
         $input = (static function () {
             yield 1;
@@ -148,14 +148,14 @@ class ConvertingTest extends TestCase
         $this->assertSame([0 => 1, 1 => 2, 2 => 3], iterator_to_array($result));
     }
 
-    public function testKeysArePreserved(): void
+    public function testToGeneratorPreservesKeys(): void
     {
         $result = iterable_to_generator(['a' => 1, 'b' => 2]);
 
         $this->assertSame(['a' => 1, 'b' => 2], iterator_to_array($result));
     }
 
-    public function testConvertsAnEmptyIterable(): void
+    public function testToGeneratorReturnsEmptyForEmptyIterable(): void
     {
         $result = iterable_to_generator([]);
 

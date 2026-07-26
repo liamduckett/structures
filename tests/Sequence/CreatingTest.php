@@ -15,21 +15,21 @@ class CreatingTest extends TestCase
 {
     use TestsStructures;
 
-    public function testMakeWithAnArray(): void
+    public function testMakeAcceptsArrays(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 
         $this->assertSequence($sequence, [1, 2, 3]);
     }
 
-    public function testMakeWithAnIterable(): void
+    public function testMakeAcceptsIterables(): void
     {
         $sequence = Sequence::make($this->buildTypedIterator([1, 2, 3]));
 
         $this->assertSequence($sequence, [1, 2, 3]);
     }
 
-    public function testMakeWithAGenerator(): void
+    public function testMakeAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;
@@ -47,7 +47,7 @@ class CreatingTest extends TestCase
         $this->assertSequence(Sequence::make(), []);
     }
 
-    public function testMakeReIndexesKeys(): void
+    public function testMakeReindexesKeys(): void
     {
         $sequence = Sequence::make([
             5 => 1,
@@ -57,7 +57,7 @@ class CreatingTest extends TestCase
         $this->assertSequence($sequence, [1, 2]);
     }
 
-    public function testConstructorReIndexesClosureKeys(): void
+    public function testConstructorReindexesClosureKeys(): void
     {
         $sequence = new Sequence(static function () {
             yield from [5 => 10, 10 => 20];
@@ -67,7 +67,7 @@ class CreatingTest extends TestCase
         $this->assertSame(20, $sequence->get(1));
     }
 
-    public function testConstructorReIndexesDuplicateClosureKeys(): void
+    public function testConstructorReindexesDuplicateClosureKeys(): void
     {
         $sequence = new Sequence(static function () {
             yield from [10, 20];

@@ -73,7 +73,7 @@ class MappingTest extends TestCase
         $this->assertCount(3, $counter);
     }
 
-    public function testMappedSequenceCanBeIteratedTwice(): void
+    public function testMapCanBeIteratedTwice(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 

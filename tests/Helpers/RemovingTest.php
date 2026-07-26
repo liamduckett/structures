@@ -31,7 +31,7 @@ class RemovingTest extends TestCase
         $this->assertSame([2 => 3, 3 => 4, 4 => 5], iterator_to_array($result));
     }
 
-    public function testSliceASingleItem(): void
+    public function testSliceExtractsSingleItem(): void
     {
         $result = iterable_slice([1, 2, 3], 1, 1);
 
@@ -45,14 +45,14 @@ class RemovingTest extends TestCase
         $this->assertSame(['b' => 2, 'c' => 3], iterator_to_array($result));
     }
 
-    public function testSliceAnIterable(): void
+    public function testSliceAcceptsIterables(): void
     {
         $result = iterable_slice(new ArrayIterator([1, 2, 3, 4]), 1, 2);
 
         $this->assertSame([1 => 2, 2 => 3], iterator_to_array($result));
     }
 
-    public function testSliceAGenerator(): void
+    public function testSliceAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;
@@ -76,7 +76,7 @@ class RemovingTest extends TestCase
         $this->assertSame([], iterator_to_array($result));
     }
 
-    public function testSliceWithLengthGreaterThanRemaining(): void
+    public function testSliceWithLengthGreaterThanRemainingGoesToEnd(): void
     {
         $result = iterable_slice([1, 2, 3], 1, 10);
 

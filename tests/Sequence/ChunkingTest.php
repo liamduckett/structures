@@ -55,7 +55,7 @@ class ChunkingTest extends TestCase
         ]);
     }
 
-    public function testChunkWithSizeEqualToLength(): void
+    public function testChunkWithSizeEqualToLengthYieldsOneChunk(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 
@@ -66,7 +66,7 @@ class ChunkingTest extends TestCase
         ]);
     }
 
-    public function testChunkWithSizeGreaterThanLength(): void
+    public function testChunkWithSizeGreaterThanLengthYieldsOneChunk(): void
     {
         $sequence = Sequence::make([1, 2]);
 
@@ -109,7 +109,7 @@ class ChunkingTest extends TestCase
         $this->assertCount(4, $counter);
     }
 
-    public function testChunkedSequenceCanBeIteratedTwice(): void
+    public function testChunkCanBeIteratedTwice(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 

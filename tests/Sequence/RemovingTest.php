@@ -32,21 +32,21 @@ class RemovingTest extends TestCase
         $this->assertSequence($sequence, [3, 4, 5]);
     }
 
-    public function testSliceASingleItem(): void
+    public function testSliceExtractsSingleItem(): void
     {
         $sequence = Sequence::make([1, 2, 3])->slice(1, 1);
 
         $this->assertSequence($sequence, [2]);
     }
 
-    public function testSliceReIndexes(): void
+    public function testSliceReindexes(): void
     {
         $sequence = Sequence::make([1, 2, 3])->slice(1, 2);
 
         $this->assertSame(2, $sequence->get(0));
     }
 
-    public function testSliceOnAnEmptySequenceReturnsEmpty(): void
+    public function testSliceOnEmptySequenceReturnsEmpty(): void
     {
         $this->assertSequence(Sequence::make()->slice(0), []);
     }
@@ -81,7 +81,7 @@ class RemovingTest extends TestCase
         $this->assertCount(1, $counter);
     }
 
-    public function testSlicedSequenceCanBeIteratedTwice(): void
+    public function testSliceCanBeIteratedTwice(): void
     {
         $sequence = Sequence::make([1, 2, 3, 4])->slice(1, 2);
 

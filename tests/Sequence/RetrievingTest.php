@@ -18,14 +18,14 @@ class RetrievingTest extends TestCase
 
     // Get ---
 
-    public function testGetReturnsTheValueAtAnIndex(): void
+    public function testGetReturnsTheValueAtIndex(): void
     {
         $value = Sequence::make([10, 20, 30])->get(1);
 
         $this->assertSame(20, $value);
     }
 
-    public function testGetThrowsForAnInvalidIndex(): void
+    public function testGetThrowsForInvalidIndex(): void
     {
         $this->expectException(OffsetDoesntExistException::class);
 
@@ -85,7 +85,7 @@ class RetrievingTest extends TestCase
         $this->assertCount(3, Sequence::make([1, 2, 3]));
     }
 
-    public function testCountReturnsZeroForAnEmptySequence(): void
+    public function testCountReturnsZeroForEmptySequence(): void
     {
         $this->assertCount(0, Sequence::make());
     }

@@ -15,7 +15,7 @@ class CreatingTest extends TestCase
 {
     use TestsStructures;
 
-    public function testMakeWithAnArray(): void
+    public function testMakeAcceptsArrays(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,
@@ -28,7 +28,7 @@ class CreatingTest extends TestCase
         ]);
     }
 
-    public function testMakeWithAnIterable(): void
+    public function testMakeAcceptsIterables(): void
     {
         $dictionary = Dictionary::make($this->buildTypedIterator([
             'foo' => 1,
@@ -41,7 +41,7 @@ class CreatingTest extends TestCase
         ]);
     }
 
-    public function testMakeWithAGenerator(): void
+    public function testMakeAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 'foo' => 1;

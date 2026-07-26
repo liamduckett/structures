@@ -16,7 +16,7 @@ class ChunkingTest extends TestCase
 {
     // Chunk ---
 
-    public function testChunkExhaustiveYielding(): void
+    public function testChunkYieldsAllItemsWhenEachChunkIsFullyConsumed(): void
     {
         $chunks = iterable_chunk([1, 2, 3, 4, 5], 2);
 
@@ -39,7 +39,7 @@ class ChunkingTest extends TestCase
         ], $result);
     }
 
-    public function testChunkPartialYielding(): void
+    public function testChunkSkipsRemainingItemsWhenEachChunkIsPartiallyConsumed(): void
     {
         $chunks = iterable_chunk([1, 2, 3, 4, 5], 2);
 
@@ -56,7 +56,7 @@ class ChunkingTest extends TestCase
         $this->assertSame([1, 3, 5], $result);
     }
 
-    public function testChunkNoYielding(): void
+    public function testChunkYieldsEveryChunkWhenNoChunkIsConsumed(): void
     {
         $chunks = iterable_chunk([1, 2, 3, 4, 5], 2);
 
@@ -69,7 +69,7 @@ class ChunkingTest extends TestCase
         $this->assertSame(3, $count);
     }
 
-    public function testChunkAGenerator(): void
+    public function testChunkAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;
@@ -104,7 +104,7 @@ class ChunkingTest extends TestCase
         ], $result);
     }
 
-    public function testChunkWithSizeEqualToLength(): void
+    public function testChunkWithSizeEqualToLengthYieldsOneChunk(): void
     {
         $chunks = iterable_chunk([1, 2, 3], 3);
 
@@ -117,7 +117,7 @@ class ChunkingTest extends TestCase
         $this->assertSame([[0 => 1, 1 => 2, 2 => 3]], $result);
     }
 
-    public function testChunkWithSizeGreaterThanLength(): void
+    public function testChunkWithSizeGreaterThanLengthYieldsOneChunk(): void
     {
         $chunks = iterable_chunk([1, 2], 10);
 
@@ -130,7 +130,7 @@ class ChunkingTest extends TestCase
         $this->assertSame([[0 => 1, 1 => 2]], $result);
     }
 
-    public function testChunkKeysArePreserved(): void
+    public function testChunkPreservesKeys(): void
     {
         $chunks = iterable_chunk(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5], 2);
 
@@ -200,7 +200,7 @@ class ChunkingTest extends TestCase
 
     // Chunk Values ---
 
-    public function testChunkValuesExhaustiveYielding(): void
+    public function testChunkValuesYieldsAllItemsWhenEachChunkIsFullyConsumed(): void
     {
         $chunks = iterable_chunk_values([1, 2, 3, 4, 5], 2);
 
@@ -223,7 +223,7 @@ class ChunkingTest extends TestCase
         ], $result);
     }
 
-    public function testChunkValuesPartialYielding(): void
+    public function testChunkValuesSkipsRemainingItemsWhenEachChunkIsPartiallyConsumed(): void
     {
         $chunks = iterable_chunk_values([1, 2, 3, 4, 5], 2);
 
@@ -240,7 +240,7 @@ class ChunkingTest extends TestCase
         $this->assertSame([1, 3, 5], $result);
     }
 
-    public function testChunkValuesNoYielding(): void
+    public function testChunkValuesYieldsEveryChunkWhenNoChunkIsConsumed(): void
     {
         $chunks = iterable_chunk_values([1, 2, 3, 4, 5], 2);
 
@@ -253,7 +253,7 @@ class ChunkingTest extends TestCase
         $this->assertSame(3, $count);
     }
 
-    public function testChunkValuesAGenerator(): void
+    public function testChunkValuesAcceptsGenerators(): void
     {
         $generator = (static function () {
             yield 1;
@@ -288,7 +288,7 @@ class ChunkingTest extends TestCase
         ], $result);
     }
 
-    public function testChunkValuesWithSizeEqualToLength(): void
+    public function testChunkValuesWithSizeEqualToLengthYieldsOneChunk(): void
     {
         $chunks = iterable_chunk_values([1, 2, 3], 3);
 
@@ -301,7 +301,7 @@ class ChunkingTest extends TestCase
         $this->assertSame([[0 => 1, 1 => 2, 2 => 3]], $result);
     }
 
-    public function testChunkValuesWithSizeGreaterThanLength(): void
+    public function testChunkValuesWithSizeGreaterThanLengthYieldsOneChunk(): void
     {
         $chunks = iterable_chunk_values([1, 2], 10);
 
@@ -314,7 +314,7 @@ class ChunkingTest extends TestCase
         $this->assertSame([[0 => 1, 1 => 2]], $result);
     }
 
-    public function testChunkValuesKeysAreNotPreserved(): void
+    public function testChunkValuesDiscardsKeys(): void
     {
         $chunks = iterable_chunk_values(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5], 2);
 

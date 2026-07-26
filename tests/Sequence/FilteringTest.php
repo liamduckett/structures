@@ -18,7 +18,7 @@ class FilteringTest extends TestCase
 
     // Filter ---
 
-    public function testFilterByValue(): void
+    public function testFilterPassesValueToCallable(): void
     {
         $sequence = Sequence::make([1, 2, 3, 4]);
 
@@ -27,7 +27,7 @@ class FilteringTest extends TestCase
         $this->assertSequence($filtered, [3, 4]);
     }
 
-    public function testFilterByIndex(): void
+    public function testFilterPassesIndexToCallable(): void
     {
         $sequence = Sequence::make([10, 20, 30, 40]);
 
@@ -36,7 +36,7 @@ class FilteringTest extends TestCase
         $this->assertSequence($filtered, [10, 30]);
     }
 
-    public function testFilterReIndexes(): void
+    public function testFilterReindexes(): void
     {
         $sequence = Sequence::make([1, 2, 3]);
 
@@ -82,7 +82,7 @@ class FilteringTest extends TestCase
         $this->assertCount(3, $counter);
     }
 
-    public function testFilteredSequenceCanBeIteratedTwice(): void
+    public function testFilterCanBeIteratedTwice(): void
     {
         $sequence = Sequence::make([1, 2, 3, 4]);
 
@@ -141,7 +141,7 @@ class FilteringTest extends TestCase
         $this->assertCount(3, $counter);
     }
 
-    public function testSearchedSequenceCanBeIteratedTwice(): void
+    public function testSearchCanBeIteratedTwice(): void
     {
         $sequence = Sequence::make([1, 2, 1]);
 

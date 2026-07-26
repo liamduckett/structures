@@ -16,7 +16,7 @@ class RemovingTest extends TestCase
 {
     use TestsStructures;
 
-    public function testRemoveRemovesAnExistingKey(): void
+    public function testRemoveRemovesExistingKey(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,
@@ -30,7 +30,7 @@ class RemovingTest extends TestCase
         ]);
     }
 
-    public function testRemoveOnANonExistentKeyIsANoop(): void
+    public function testRemoveOnMissingKeyIsNoop(): void
     {
         $dictionary = Dictionary::make(['foo' => 1]);
 
@@ -79,7 +79,7 @@ class RemovingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testRemovedDictionaryCanBeIteratedTwice(): void
+    public function testRemoveCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make([
             'foo' => 1,

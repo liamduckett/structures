@@ -18,7 +18,7 @@ class AddingTest extends TestCase
 
     // Set ---
 
-    public function testSetAddsANewKey(): void
+    public function testSetAddsNewKey(): void
     {
         $dictionary = Dictionary::make()
             ->set('foo', 1)
@@ -30,7 +30,7 @@ class AddingTest extends TestCase
         ]);
     }
 
-    public function testSetOverwritesAnExistingKey(): void
+    public function testSetOverwritesExistingKey(): void
     {
         $dictionary = Dictionary::make()
             ->set('foo', 1)
@@ -75,7 +75,7 @@ class AddingTest extends TestCase
         $this->assertCount(2, $counter);
     }
 
-    public function testSetDictionaryCanBeIteratedTwice(): void
+    public function testSetCanBeIteratedTwice(): void
     {
         $dictionary = Dictionary::make(['foo' => 1])->set('bar', 2);
 
