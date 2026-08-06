@@ -263,9 +263,7 @@ class RetrievingTest extends TestCase
 
     public function testFirstReturnsOnlyItemOfSingleItemArray(): void
     {
-        /** @var list<int> $items */
-        $items = [42];
-        $this->assertSame(42, iterable_first($items));
+        $this->assertSame(42, iterable_first([42])); // // @phpstan-ignore method.alreadyNarrowedType
     }
 
     public function testFirstAcceptsIterables(): void
@@ -314,9 +312,7 @@ class RetrievingTest extends TestCase
 
     public function testLastReturnsOnlyItemOfSingleItemArray(): void
     {
-        /** @var list<int> $items */
-        $items = [42];
-        $this->assertSame(42, iterable_last($items));
+        $this->assertSame(42, iterable_last([42])); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     public function testLastAcceptsIterables(): void

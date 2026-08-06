@@ -20,22 +20,16 @@ class ConvertingTest extends TestCase
 
     public function testValueReturnsIterablesUnchanged(): void
     {
-        /** @var list<int> $array */
-        $array = [1, 2, 3];
+        $result = value([1, 2, 3]);
 
-        $result = value($array);
-
-        $this->assertSame([1, 2, 3], $result);
+        $this->assertSame([1, 2, 3], $result); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     public function testValueCallsClosures(): void
     {
-        /** @var list<int> $array */
-        $array = [1, 2, 3];
+        $result = value(static fn () => [1, 2, 3]);
 
-        $result = value(static fn () => $array);
-
-        $this->assertSame([1, 2, 3], $result);
+        $this->assertSame([1, 2, 3], $result); // @phpstan-ignore method.alreadyNarrowedType
     }
 
     public function testValueAcceptsGenerators(): void
