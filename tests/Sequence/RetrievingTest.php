@@ -32,6 +32,13 @@ class RetrievingTest extends TestCase
         Sequence::make([1, 2, 3])->get(99);
     }
 
+    public function testGetReturnsNullValueAtIndex(): void
+    {
+        $value = Sequence::make([10, null, 30])->get(1);
+
+        $this->assertNull($value);
+    }
+
     // First ---
 
     public function testFirstReturnsTheFirstItem(): void
@@ -88,5 +95,10 @@ class RetrievingTest extends TestCase
     public function testCountReturnsZeroForEmptySequence(): void
     {
         $this->assertCount(0, Sequence::make());
+    }
+
+    public function testCountIncludesFalsyValues(): void
+    {
+        $this->assertCount(5, Sequence::make([null, 0, '', false, []]));
     }
 }

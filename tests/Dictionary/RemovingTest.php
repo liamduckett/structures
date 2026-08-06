@@ -41,6 +41,20 @@ class RemovingTest extends TestCase
         ]);
     }
 
+    public function testRemoveRemovesKeyHoldingNull(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => null,
+            'bar' => 2,
+        ]);
+
+        $withoutFoo = $dictionary->remove('foo');
+
+        $this->assertDictionary($withoutFoo, [
+            'bar' => 2,
+        ]);
+    }
+
     public function testRemoveIsImmutable(): void
     {
         $original = Dictionary::make([

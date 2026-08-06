@@ -54,6 +54,15 @@ class FilteringTest extends TestCase
         $this->assertSequence($filtered, []);
     }
 
+    public function testFilterRequiresCallableToReturnTrue(): void
+    {
+        $sequence = Sequence::make([1, 2, 3]);
+
+        $filtered = $sequence->filter(static fn (int $value) => $value); // @phpstan-ignore argument.type
+
+        $this->assertSequence($filtered, []);
+    }
+
     public function testFilterIsImmutable(): void
     {
         $original = Sequence::make([1, 2, 3]);
@@ -118,6 +127,15 @@ class FilteringTest extends TestCase
         $indexes = $sequence->search(1);
 
         $this->assertSequence($indexes, [0]);
+    }
+
+    public function testSearchReturnsIndexesOfNullValues(): void
+    {
+        $sequence = Sequence::make([null, 0, '', false, null]);
+
+        $indexes = $sequence->search(null);
+
+        $this->assertSequence($indexes, [0, 4]);
     }
 
     public function testSearchIsLazy(): void

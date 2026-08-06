@@ -153,6 +153,11 @@ class RetrievingTest extends TestCase
         $this->assertSame(0, iterable_count(new ArrayIterator([])));
     }
 
+    public function testCountIncludesFalsyValues(): void
+    {
+        $this->assertSame(5, iterable_count([null, 0, '', false, []]));
+    }
+
     public function testCountUsesCountableInterfaceRatherThanIterating(): void
     {
         $countable = new class implements Countable, IteratorAggregate {
@@ -236,6 +241,12 @@ class RetrievingTest extends TestCase
         iterable_get(['a' => 1, 'b' => 2], 'z');
     }
 
+    public function testGetReturnsNullForKeyHoldingNull(): void
+    {
+        $this->assertNull(iterable_get(['a' => null, 'b' => 1], 'a'));
+        $this->assertNull(iterable_get([null, 1], 0));
+    }
+
     public function testGetUsesStrictComparison(): void
     {
         $this->expectException(OffsetDoesntExistException::class);
@@ -273,6 +284,11 @@ class RetrievingTest extends TestCase
         })();
 
         $this->assertSame(10, iterable_first($generator));
+    }
+
+    public function testFirstWorksWithNullValues(): void
+    {
+        $this->assertNull(iterable_first([null, 2, 3]));
     }
 
     public function testFirstThrowsForEmptyArray(): void
@@ -323,7 +339,16 @@ class RetrievingTest extends TestCase
 
     public function testLastWorksWithNullValues(): void
     {
+        $generator = (static function () {
+            yield 1;
+
+            yield 2;
+
+            yield null;
+        })();
+
         $this->assertNull(iterable_last([1, 2, null]));
+        $this->assertNull(iterable_last($generator));
     }
 
     public function testLastThrowsForEmptyArray(): void

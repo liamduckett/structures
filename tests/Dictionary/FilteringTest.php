@@ -77,6 +77,18 @@ class FilteringTest extends TestCase
         $this->assertDictionary($filtered, []);
     }
 
+    public function testFilterRequiresCallableToReturnTrue(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $filtered = $dictionary->filter(static fn (int $value) => $value); // @phpstan-ignore argument.type
+
+        $this->assertDictionary($filtered, []);
+    }
+
     public function testFilterIsImmutable(): void
     {
         $original = Dictionary::make([
@@ -164,6 +176,20 @@ class FilteringTest extends TestCase
         $keys = $dictionary->search(1);
 
         $this->assertSequence($keys, ['foo']);
+    }
+
+    public function testSearchReturnsKeysOfNullValues(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => null,
+            'bar' => 0,
+            'baz' => '',
+            'qux' => null,
+        ]);
+
+        $keys = $dictionary->search(null);
+
+        $this->assertSequence($keys, ['foo', 'qux']);
     }
 
     public function testSearchIsLazy(): void

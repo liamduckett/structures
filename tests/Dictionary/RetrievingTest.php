@@ -36,6 +36,16 @@ class RetrievingTest extends TestCase
         Dictionary::make()->set('foo', 1)->get('bar');
     }
 
+    public function testGetReturnsNullForKeyHoldingNull(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => null,
+            'bar' => 1,
+        ]);
+
+        $this->assertNull($dictionary->get('foo'));
+    }
+
     // keys ---
 
     public function testKeysReturnsAllKeys(): void

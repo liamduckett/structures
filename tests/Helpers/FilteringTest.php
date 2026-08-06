@@ -60,6 +60,13 @@ class FilteringTest extends TestCase
         $this->assertSame([1 => 2, 2 => 3], iterator_to_array($result));
     }
 
+    public function testFilterRequiresCallableToReturnTrue(): void
+    {
+        $result = iterable_filter([1, 2, 3], static fn (int $value) => $value); // @phpstan-ignore argument.type
+
+        $this->assertSame([], iterator_to_array($result));
+    }
+
     public function testFilterReturnsEmptyWhenNothingMatches(): void
     {
         $result = iterable_filter(new ArrayIterator([1, 2, 3]), static fn (int $value) => $value > 99);
@@ -95,5 +102,12 @@ class FilteringTest extends TestCase
         $result = iterable_search(['foo' => 1, 'bar' => '1'], 1);
 
         $this->assertSame(['foo'], iterator_to_array($result));
+    }
+
+    public function testSearchReturnsKeysOfNullValues(): void
+    {
+        $result = iterable_search([null, 0, '', false, null], null);
+
+        $this->assertSame([0, 4], iterator_to_array($result));
     }
 }

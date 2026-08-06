@@ -73,6 +73,28 @@ class ContainingTest extends TestCase
         $this->assertFalse($containsValue);
     }
 
+    public function testContainsValueReturnsTrueForNullValue(): void
+    {
+        $dictionary = Dictionary::make(['foo' => null]);
+
+        $containsValue = $dictionary->containsValue(null);
+
+        $this->assertTrue($containsValue);
+    }
+
+    public function testContainsValueDistinguishesNullFromOtherFalsyValues(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 0,
+            'bar' => '',
+            'baz' => false,
+        ]);
+
+        $containsValue = $dictionary->containsValue(null); // @phpstan-ignore argument.type
+
+        $this->assertFalse($containsValue);
+    }
+
     // DoesntContainKey ---
 
     public function testDoesntContainKeyReturnsFalseForExistingKey(): void
@@ -93,6 +115,15 @@ class ContainingTest extends TestCase
         $this->assertTrue($doesntContainKey);
     }
 
+    public function testDoesntContainKeyReturnsFalseForKeyHoldingNull(): void
+    {
+        $dictionary = Dictionary::make(['foo' => null]);
+
+        $doesntContainKey = $dictionary->doesntContainKey('foo');
+
+        $this->assertFalse($doesntContainKey);
+    }
+
     // DoesntContainValue ---
 
     public function testDoesntContainValueReturnsFalseForExistingValue(): void
@@ -111,6 +142,15 @@ class ContainingTest extends TestCase
         $doesntContainValue = $dictionary->doesntContainValue(99);
 
         $this->assertTrue($doesntContainValue);
+    }
+
+    public function testDoesntContainValueReturnsFalseForNullValue(): void
+    {
+        $dictionary = Dictionary::make(['foo' => null]);
+
+        $doesntContainValue = $dictionary->doesntContainValue(null);
+
+        $this->assertFalse($doesntContainValue);
     }
 
     // IsEmpty ---

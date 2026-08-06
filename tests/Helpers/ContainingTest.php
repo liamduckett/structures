@@ -52,6 +52,11 @@ class ContainingTest extends TestCase
         $this->assertFalse(iterable_contains([1, 2, 3], true));
     }
 
+    public function testContainsReturnsTrueForNullValue(): void
+    {
+        $this->assertTrue(iterable_contains([1, null, 3], null));
+    }
+
     public function testContainsReturnsFalseForEmptyIterable(): void
     {
         $this->assertFalse(iterable_contains([], 1));
@@ -93,6 +98,12 @@ class ContainingTest extends TestCase
     public function testContainsKeyUsesStrictComparison(): void
     {
         $this->assertFalse(iterable_contains_key([1, 2, 3], '0'));
+    }
+
+    public function testContainsKeyReturnsTrueForKeyHoldingNull(): void
+    {
+        $this->assertTrue(iterable_contains_key(['a' => null], 'a'));
+        $this->assertTrue(iterable_contains_key([null], 0));
     }
 
     public function testContainsKeyReturnsFalseForEmptyIterable(): void
