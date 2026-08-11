@@ -138,6 +138,15 @@ class FilteringTest extends TestCase
         $this->assertSequence($indexes, [0, 4]);
     }
 
+    public function testSearchDistinguishesNullFromOtherFalsyValues(): void
+    {
+        $sequence = Sequence::make([0, '', false]);
+
+        $indexes = $sequence->search(null); // @phpstan-ignore argument.type
+
+        $this->assertSequence($indexes, []);
+    }
+
     public function testSearchIsLazy(): void
     {
         $counter = new CallCounter();

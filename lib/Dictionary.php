@@ -9,7 +9,7 @@ use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 use Traversable;
 
 /**
- * @template T of mixed
+ * @template T
  *
  * @readonly
  *
@@ -37,7 +37,7 @@ final class Dictionary implements IteratorAggregate
     }
 
     /**
-     * @template TMake of mixed
+     * @template TMake
      *
      * @param iterable<non-empty-string, TMake> $items
      *

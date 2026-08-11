@@ -61,4 +61,31 @@ class CreatingTest extends TestCase
     {
         $this->assertDictionary(Dictionary::make(), []);
     }
+
+    public function testMakeCanBeIteratedTwice(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $this->assertIteratesTwice($dictionary, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+    }
+
+    public function testConstructorCanBeIteratedTwice(): void
+    {
+        $dictionary = new Dictionary(static function () {
+            yield 'foo' => 1;
+
+            yield 'bar' => 2;
+        });
+
+        $this->assertIteratesTwice($dictionary, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+    }
 }

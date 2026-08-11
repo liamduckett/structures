@@ -79,4 +79,20 @@ class CreatingTest extends TestCase
 
         $this->assertSame(30, $sequence->get(2));
     }
+
+    public function testMakeCanBeIteratedTwice(): void
+    {
+        $sequence = Sequence::make([1, 2, 3]);
+
+        $this->assertIteratesTwice($sequence, [1, 2, 3]);
+    }
+
+    public function testConstructorCanBeIteratedTwice(): void
+    {
+        $sequence = new Sequence(static function () {
+            yield from [1, 2, 3];
+        });
+
+        $this->assertIteratesTwice($sequence, [1, 2, 3]);
+    }
 }

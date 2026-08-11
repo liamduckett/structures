@@ -102,7 +102,7 @@ class RemovingTest extends TestCase
         $this->assertCount(3, $counter);
     }
 
-    public function testSliceOfEmptyIterableReturnsEmpty(): void
+    public function testSliceOnEmptyIterableReturnsEmpty(): void
     {
         $result = iterable_slice([], 0);
 

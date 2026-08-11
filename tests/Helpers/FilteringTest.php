@@ -90,7 +90,7 @@ class FilteringTest extends TestCase
         $this->assertSame([1, 3], iterator_to_array($result));
     }
 
-    public function testSearchReturnsEmptyWhenNothingMatches(): void
+    public function testSearchReturnsEmptyWhenValueNotFound(): void
     {
         $result = iterable_search([1, 2, 3], 99);
 
@@ -109,5 +109,12 @@ class FilteringTest extends TestCase
         $result = iterable_search([null, 0, '', false, null], null);
 
         $this->assertSame([0, 4], iterator_to_array($result));
+    }
+
+    public function testSearchDistinguishesNullFromOtherFalsyValues(): void
+    {
+        $result = iterable_search([0, '', false], null);
+
+        $this->assertSame([], iterator_to_array($result));
     }
 }

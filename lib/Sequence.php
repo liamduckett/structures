@@ -10,7 +10,7 @@ use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 use Traversable;
 
 /**
- * @template T of mixed
+ * @template T
  *
  * @readonly
  *
@@ -38,7 +38,7 @@ final class Sequence implements Countable, IteratorAggregate
     }
 
     /**
-     * @template TMake of mixed
+     * @template TMake
      *
      * @param iterable<TMake> $items
      *

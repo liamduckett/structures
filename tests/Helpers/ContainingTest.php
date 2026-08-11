@@ -57,6 +57,11 @@ class ContainingTest extends TestCase
         $this->assertTrue(iterable_contains([1, null, 3], null));
     }
 
+    public function testContainsDistinguishesNullFromOtherFalsyValues(): void
+    {
+        $this->assertFalse(iterable_contains([0, '', false], null));
+    }
+
     public function testContainsReturnsFalseForEmptyIterable(): void
     {
         $this->assertFalse(iterable_contains([], 1));

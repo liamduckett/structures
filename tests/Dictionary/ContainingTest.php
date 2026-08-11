@@ -35,6 +35,15 @@ class ContainingTest extends TestCase
         $this->assertFalse($containsKey);
     }
 
+    public function testContainsKeyUsesStrictComparison(): void
+    {
+        $dictionary = Dictionary::make([1 => 'foo']); // @phpstan-ignore argument.type
+
+        $containsKey = $dictionary->containsKey('1');
+
+        $this->assertFalse($containsKey);
+    }
+
     public function testContainsKeyReturnsTrueForKeyHoldingNull(): void
     {
         $dictionary = Dictionary::make(['foo' => null]);
@@ -115,6 +124,15 @@ class ContainingTest extends TestCase
         $this->assertTrue($doesntContainKey);
     }
 
+    public function testDoesntContainKeyUsesStrictComparison(): void
+    {
+        $dictionary = Dictionary::make([1 => 'foo']); // @phpstan-ignore argument.type
+
+        $doesntContainKey = $dictionary->doesntContainKey('1');
+
+        $this->assertTrue($doesntContainKey);
+    }
+
     public function testDoesntContainKeyReturnsFalseForKeyHoldingNull(): void
     {
         $dictionary = Dictionary::make(['foo' => null]);
@@ -144,6 +162,15 @@ class ContainingTest extends TestCase
         $this->assertTrue($doesntContainValue);
     }
 
+    public function testDoesntContainValueUsesStrictComparison(): void
+    {
+        $dictionary = Dictionary::make(['foo' => 1]);
+
+        $doesntContainValue = $dictionary->doesntContainValue('1'); // @phpstan-ignore argument.type
+
+        $this->assertTrue($doesntContainValue);
+    }
+
     public function testDoesntContainValueReturnsFalseForNullValue(): void
     {
         $dictionary = Dictionary::make(['foo' => null]);
@@ -151,6 +178,19 @@ class ContainingTest extends TestCase
         $doesntContainValue = $dictionary->doesntContainValue(null);
 
         $this->assertFalse($doesntContainValue);
+    }
+
+    public function testDoesntContainValueDistinguishesNullFromOtherFalsyValues(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 0,
+            'bar' => '',
+            'baz' => false,
+        ]);
+
+        $doesntContainValue = $dictionary->doesntContainValue(null); // @phpstan-ignore argument.type
+
+        $this->assertTrue($doesntContainValue);
     }
 
     // IsEmpty ---

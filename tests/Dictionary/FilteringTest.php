@@ -16,7 +16,7 @@ class FilteringTest extends TestCase
 {
     use TestsStructures;
 
-    // filter ---
+    // Filter ---
 
     public function testFilterPassesValueToCallable(): void
     {
@@ -139,7 +139,7 @@ class FilteringTest extends TestCase
         $this->assertIteratesTwice($filtered, ['bar' => 2]);
     }
 
-    // search ---
+    // Search ---
 
     public function testSearchReturnsAllMatchingKeys(): void
     {
@@ -190,6 +190,19 @@ class FilteringTest extends TestCase
         $keys = $dictionary->search(null);
 
         $this->assertSequence($keys, ['foo', 'qux']);
+    }
+
+    public function testSearchDistinguishesNullFromOtherFalsyValues(): void
+    {
+        $dictionary = Dictionary::make([
+            'foo' => 0,
+            'bar' => '',
+            'baz' => false,
+        ]);
+
+        $keys = $dictionary->search(null); // @phpstan-ignore argument.type
+
+        $this->assertSequence($keys, []);
     }
 
     public function testSearchIsLazy(): void

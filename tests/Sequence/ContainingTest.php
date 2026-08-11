@@ -82,6 +82,15 @@ class ContainingTest extends TestCase
         $this->assertTrue($doesntContain);
     }
 
+    public function testDoesntContainUsesStrictComparison(): void
+    {
+        $sequence = Sequence::make([1, 2, 3]);
+
+        $doesntContain = $sequence->doesntContain('1'); // @phpstan-ignore argument.type
+
+        $this->assertTrue($doesntContain);
+    }
+
     public function testDoesntContainReturnsFalseForNullValue(): void
     {
         $sequence = Sequence::make([1, null, 3]);
@@ -89,6 +98,15 @@ class ContainingTest extends TestCase
         $doesntContain = $sequence->doesntContain(null);
 
         $this->assertFalse($doesntContain);
+    }
+
+    public function testDoesntContainDistinguishesNullFromOtherFalsyValues(): void
+    {
+        $sequence = Sequence::make([0, '', false]);
+
+        $doesntContain = $sequence->doesntContain(null); // @phpstan-ignore argument.type
+
+        $this->assertTrue($doesntContain);
     }
 
     // IsEmpty ---

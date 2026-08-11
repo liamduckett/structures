@@ -17,7 +17,7 @@ class RetrievingTest extends TestCase
 {
     use TestsStructures;
 
-    // get ---
+    // Get ---
 
     public function testGetReturnsTheValueForExistingKey(): void
     {
@@ -36,6 +36,13 @@ class RetrievingTest extends TestCase
         Dictionary::make()->set('foo', 1)->get('bar');
     }
 
+    public function testGetUsesStrictComparison(): void
+    {
+        $this->expectException(OffsetDoesntExistException::class);
+
+        Dictionary::make([1 => 'foo'])->get('1'); // @phpstan-ignore argument.type
+    }
+
     public function testGetReturnsNullForKeyHoldingNull(): void
     {
         $dictionary = Dictionary::make([
@@ -46,7 +53,7 @@ class RetrievingTest extends TestCase
         $this->assertNull($dictionary->get('foo'));
     }
 
-    // keys ---
+    // Keys ---
 
     public function testKeysReturnsAllKeys(): void
     {
@@ -98,7 +105,7 @@ class RetrievingTest extends TestCase
         $this->assertIteratesTwice($keys, ['foo', 'bar']);
     }
 
-    // values ---
+    // Values ---
 
     public function testValuesStripsStringKeys(): void
     {

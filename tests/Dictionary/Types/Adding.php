@@ -15,3 +15,7 @@ assertType('Liamduckett\Structures\Dictionary<int>', $set);
 $setWithEmptyKey = $dictionary->set('', 2); // @phpstan-ignore argument.type
 
 assertType('Liamduckett\Structures\Dictionary<int>', $setWithEmptyKey);
+
+$setWithForeignValue = $dictionary->set('bar', 'baz'); // @phpstan-ignore argument.type
+
+assertType('Liamduckett\Structures\Dictionary<int>', $setWithForeignValue);

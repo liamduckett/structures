@@ -1,6 +1,7 @@
 <?php
 
 use function Liamduckett\Structures\iterable_filter;
+use function Liamduckett\Structures\iterable_search;
 use function PHPStan\Testing\assertType;
 
 // Filter ---
@@ -24,3 +25,21 @@ $notEmptyStringArray = [];
 $result = iterable_filter($notEmptyStringArray, static fn (int $value) => true);
 
 assertType('Generator<non-empty-string, int, mixed, void>', $result);
+
+// Search ---
+
+$result = iterable_search([10, 20, 30], 20);
+
+assertType('Generator<int, 0|1|2, mixed, void>', $result);
+
+$result = iterable_search(['a' => 1, 'b' => 2], 1);
+
+assertType("Generator<int, 'a'|'b', mixed, void>", $result);
+
+$result = iterable_search($intArray, 1);
+
+assertType('Generator<int, int, mixed, void>', $result);
+
+$result = iterable_search($notEmptyStringArray, 1);
+
+assertType('Generator<int, non-empty-string, mixed, void>', $result);

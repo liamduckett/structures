@@ -15,7 +15,7 @@ class ConvertingTest extends TestCase
 {
     use TestsStructures;
 
-    // array ---
+    // Array ---
 
     public function testArrayReturnsTheUnderlyingArray(): void
     {
@@ -27,7 +27,7 @@ class ConvertingTest extends TestCase
         $this->assertSame(['foo' => 1, 'bar' => 2], $dictionary->array());
     }
 
-    // getIterator ---
+    // GetIterator ---
 
     public function testGetIteratorCanBeIterated(): void
     {
@@ -39,7 +39,7 @@ class ConvertingTest extends TestCase
         $this->assertIterator($dictionary->getIterator(), ['foo' => 1, 'bar' => 2]);
     }
 
-    // iterator ---
+    // Iterator ---
 
     public function testIteratorCanBeIterated(): void
     {

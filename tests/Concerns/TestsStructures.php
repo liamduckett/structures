@@ -10,7 +10,7 @@ use Traversable;
 trait TestsStructures
 {
     /**
-     * @template T of mixed
+     * @template T
      *
      * @param Dictionary<T>              $dictionary
      * @param array<non-empty-string, T> $expected
@@ -21,7 +21,7 @@ trait TestsStructures
     }
 
     /**
-     * @template T of mixed
+     * @template T
      *
      * @param Sequence<T> $sequence
      * @param list<T>     $expected
@@ -32,7 +32,7 @@ trait TestsStructures
     }
 
     /**
-     * @template T of mixed
+     * @template T
      *
      * @param Sequence<Dictionary<T>>          $sequence
      * @param list<array<non-empty-string, T>> $expected
@@ -49,7 +49,7 @@ trait TestsStructures
     }
 
     /**
-     * @template T of mixed
+     * @template T
      *
      * @param Sequence<Sequence<T>> $sequence
      * @param list<list<T>>         $expected
@@ -67,7 +67,7 @@ trait TestsStructures
 
     /**
      * @template TKey of array-key
-     * @template T of mixed
+     * @template T
      *
      * @param Traversable<TKey, T> $iterator
      * @param array<TKey, T>       $expected
@@ -79,7 +79,7 @@ trait TestsStructures
 
     /**
      * @template TKey of array-key
-     * @template T of mixed
+     * @template T
      *
      * @param iterable<TKey, T> $iterable
      * @param array<TKey, T>    $expected
@@ -108,7 +108,7 @@ trait TestsStructures
      * @see https://github.com/phpstan/phpstan/issues/10289
      *
      * @template TKey of int|string
-     * @template T of mixed
+     * @template T
      *
      * @param array<TKey, T> $items
      *
