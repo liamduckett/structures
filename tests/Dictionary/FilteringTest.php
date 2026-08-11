@@ -205,6 +205,23 @@ class FilteringTest extends TestCase
         $this->assertSequence($keys, []);
     }
 
+    public function testSearchIsImmutable(): void
+    {
+        $original = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 1,
+        ]);
+
+        $original->search(1);
+
+        $this->assertDictionary($original, [
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 1,
+        ]);
+    }
+
     public function testSearchIsLazy(): void
     {
         $counter = new CallCounter();

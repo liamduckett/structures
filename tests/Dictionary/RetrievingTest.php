@@ -72,6 +72,21 @@ class RetrievingTest extends TestCase
         $this->assertSequence($keys, []);
     }
 
+    public function testKeysIsImmutable(): void
+    {
+        $original = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $original->keys();
+
+        $this->assertDictionary($original, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+    }
+
     public function testKeysIsLazy(): void
     {
         $counter = new CallCounter();
@@ -122,6 +137,21 @@ class RetrievingTest extends TestCase
         $values = Dictionary::make()->values();
 
         $this->assertSequence($values, []);
+    }
+
+    public function testValuesIsImmutable(): void
+    {
+        $original = Dictionary::make([
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $original->values();
+
+        $this->assertDictionary($original, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
     }
 
     public function testValuesIsLazy(): void

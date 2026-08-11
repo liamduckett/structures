@@ -147,6 +147,15 @@ class FilteringTest extends TestCase
         $this->assertSequence($indexes, []);
     }
 
+    public function testSearchIsImmutable(): void
+    {
+        $original = Sequence::make([10, 20, 30, 20]);
+
+        $original->search(20);
+
+        $this->assertSequence($original, [10, 20, 30, 20]);
+    }
+
     public function testSearchIsLazy(): void
     {
         $counter = new CallCounter();
