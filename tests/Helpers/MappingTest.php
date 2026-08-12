@@ -4,6 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 
 use function Liamduckett\Structures\iterable_map;
 
@@ -14,6 +15,8 @@ use function Liamduckett\Structures\iterable_map;
  */
 class MappingTest extends TestCase
 {
+    use TestsGenerators;
+
     // Map ---
 
     public function testMapAcceptsArrays(): void
@@ -55,5 +58,14 @@ class MappingTest extends TestCase
         $result = iterable_map(['a' => 1, 'b' => 2], static fn (int $value) => $value * 2);
 
         $this->assertSame(['a' => 2, 'b' => 4], iterator_to_array($result));
+    }
+
+    public function testMapRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_map($this->buildPartiallyConsumedGenerator([1, 2]), static fn (int $value): int => $value);
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 }

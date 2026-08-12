@@ -3,6 +3,7 @@
 namespace Tests\Helpers;
 
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 
 use function Liamduckett\Structures\iterable_chunk;
 use function Liamduckett\Structures\iterable_chunk_values;
@@ -14,6 +15,8 @@ use function Liamduckett\Structures\iterable_chunk_values;
  */
 class ChunkingTest extends TestCase
 {
+    use TestsGenerators;
+
     // Chunk ---
 
     public function testChunkYieldsAllItemsWhenEachChunkIsFullyConsumed(): void
@@ -198,6 +201,15 @@ class ChunkingTest extends TestCase
         ], $result);
     }
 
+    public function testChunkRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_chunk($this->buildPartiallyConsumedGenerator([1, 2, 3]), 2);
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
+    }
+
     // Chunk Values ---
 
     public function testChunkValuesYieldsAllItemsWhenEachChunkIsFullyConsumed(): void
@@ -358,5 +370,14 @@ class ChunkingTest extends TestCase
             [0 => 3, 1 => 4],
             [0 => 5, 1 => 6],
         ], $result);
+    }
+
+    public function testChunkValuesRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_chunk_values($this->buildPartiallyConsumedGenerator([1, 2, 3]), 2);
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 }

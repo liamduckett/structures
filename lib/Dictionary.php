@@ -32,7 +32,7 @@ final class Dictionary implements IteratorAggregate
                 ? $items()
                 : $items;
 
-            yield from $items;
+            yield from iterable_to_generator($items);
         };
     }
 

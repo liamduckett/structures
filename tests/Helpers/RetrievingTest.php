@@ -7,6 +7,7 @@ use Countable;
 use IteratorAggregate;
 use Liamduckett\Structures\Exceptions\OffsetDoesntExistException;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 use Traversable;
 
 use function Liamduckett\Structures\iterable_count;
@@ -23,6 +24,8 @@ use function Liamduckett\Structures\iterable_values;
  */
 class RetrievingTest extends TestCase
 {
+    use TestsGenerators;
+
     // Values ---
 
     public function testValuesAcceptsArrays(): void
@@ -66,6 +69,15 @@ class RetrievingTest extends TestCase
         $result = iterable_values([]);
 
         $this->assertSame([], iterator_to_array($result));
+    }
+
+    public function testValuesRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_values($this->buildPartiallyConsumedGenerator([1, 2]));
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 
     // Keys ---
@@ -116,6 +128,15 @@ class RetrievingTest extends TestCase
         $result = iterable_keys([]);
 
         $this->assertSame([], iterator_to_array($result));
+    }
+
+    public function testKeysRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_keys($this->buildPartiallyConsumedGenerator(['foo' => 1, 'bar' => 2]));
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 
     // Count ---
@@ -173,6 +194,13 @@ class RetrievingTest extends TestCase
         };
 
         $this->assertSame(99, iterable_count($countable));
+    }
+
+    public function testCountRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_count($this->buildPartiallyConsumedGenerator([1, 2]));
     }
 
     // Get ---
@@ -254,6 +282,13 @@ class RetrievingTest extends TestCase
         iterable_get([10, 20, 30], '1');
     }
 
+    public function testGetRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_get($this->buildPartiallyConsumedGenerator(['foo' => 1, 'bar' => 2]), 'bar');
+    }
+
     // First ---
 
     public function testFirstReturnsFirstItem(): void
@@ -301,6 +336,13 @@ class RetrievingTest extends TestCase
         $this->expectException(OffsetDoesntExistException::class);
 
         iterable_first(new ArrayIterator([]));
+    }
+
+    public function testFirstRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_first($this->buildPartiallyConsumedGenerator([1, 2]));
     }
 
     // Last ---
@@ -359,5 +401,12 @@ class RetrievingTest extends TestCase
         $this->expectException(OffsetDoesntExistException::class);
 
         iterable_last(new ArrayIterator([]));
+    }
+
+    public function testLastRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_last($this->buildPartiallyConsumedGenerator([1, 2]));
     }
 }

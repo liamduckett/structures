@@ -4,6 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 
 use function Liamduckett\Structures\iterable_merge;
 use function Liamduckett\Structures\iterable_set;
@@ -15,6 +16,8 @@ use function Liamduckett\Structures\iterable_set;
  */
 class AddingTest extends TestCase
 {
+    use TestsGenerators;
+
     // Merge ---
 
     public function testMergeCombinesTwoArrays(): void
@@ -72,6 +75,24 @@ class AddingTest extends TestCase
         $this->assertSame([], iterator_to_array($result));
     }
 
+    public function testMergeRejectsPartiallyConsumedGeneratorsInFirstPosition(): void
+    {
+        $result = iterable_merge($this->buildPartiallyConsumedGenerator([1, 2]));
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
+    }
+
+    public function testMergeRejectsPartiallyConsumedGeneratorsInLaterPosition(): void
+    {
+        $result = iterable_merge([1, 2], $this->buildPartiallyConsumedGenerator([3, 4]));
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
+    }
+
     // Set ---
 
     public function testSetAppendsNewKey(): void
@@ -100,5 +121,14 @@ class AddingTest extends TestCase
         $result = iterable_set(new ArrayIterator(['foo' => 1]), 'bar', 2);
 
         $this->assertSame(['foo' => 1, 'bar' => 2], iterator_to_array($result));
+    }
+
+    public function testSetRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_set($this->buildPartiallyConsumedGenerator(['foo' => 1, 'bar' => 2]), 'baz', 3);
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 }

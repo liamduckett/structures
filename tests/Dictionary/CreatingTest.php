@@ -4,6 +4,7 @@ namespace Tests\Dictionary;
 
 use Liamduckett\Structures\Dictionary;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 use Tests\Concerns\TestsStructures;
 
 /**
@@ -13,6 +14,7 @@ use Tests\Concerns\TestsStructures;
  */
 class CreatingTest extends TestCase
 {
+    use TestsGenerators;
     use TestsStructures;
 
     public function testMakeAcceptsArrays(): void
@@ -57,6 +59,18 @@ class CreatingTest extends TestCase
         ]);
     }
 
+    public function testMakeRejectsPartiallyConsumedGenerators(): void
+    {
+        $dictionary = Dictionary::make($this->buildPartiallyConsumedGenerator([
+            'foo' => 1,
+            'bar' => 2,
+        ]));
+
+        $this->expectGeneratorAlreadyRunException();
+
+        $dictionary->array();
+    }
+
     public function testMakeDefaultsToEmpty(): void
     {
         $this->assertDictionary(Dictionary::make(), []);
@@ -87,5 +101,23 @@ class CreatingTest extends TestCase
             'foo' => 1,
             'bar' => 2,
         ]);
+    }
+
+    public function testMakeRejectsGeneratorsOnSecondIteration(): void
+    {
+        $dictionary = Dictionary::make((static function () {
+            yield 'foo' => 1;
+
+            yield 'bar' => 2;
+        })());
+
+        $this->assertDictionary($dictionary, [
+            'foo' => 1,
+            'bar' => 2,
+        ]);
+
+        $this->expectGeneratorAlreadyClosedException();
+
+        $dictionary->array();
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Sequence;
 
 use Liamduckett\Structures\Sequence;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 use Tests\Concerns\TestsStructures;
 
 /**
@@ -13,6 +14,7 @@ use Tests\Concerns\TestsStructures;
  */
 class CreatingTest extends TestCase
 {
+    use TestsGenerators;
     use TestsStructures;
 
     public function testMakeAcceptsArrays(): void
@@ -40,6 +42,15 @@ class CreatingTest extends TestCase
         $sequence = Sequence::make($generator);
 
         $this->assertSequence($sequence, [1, 2]);
+    }
+
+    public function testMakeRejectsPartiallyConsumedGenerators(): void
+    {
+        $sequence = Sequence::make($this->buildPartiallyConsumedGenerator([1, 2]));
+
+        $this->expectGeneratorAlreadyRunException();
+
+        $sequence->array();
     }
 
     public function testMakeDefaultsToEmpty(): void
@@ -94,5 +105,20 @@ class CreatingTest extends TestCase
         });
 
         $this->assertIteratesTwice($sequence, [1, 2, 3]);
+    }
+
+    public function testMakeRejectsGeneratorsOnSecondIteration(): void
+    {
+        $sequence = Sequence::make((static function () {
+            yield 1;
+
+            yield 2;
+        })());
+
+        $this->assertSequence($sequence, [1, 2]);
+
+        $this->expectGeneratorAlreadyClosedException();
+
+        $sequence->array();
     }
 }

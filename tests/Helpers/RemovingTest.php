@@ -4,6 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 use Tests\Support\CallCounter;
 
 use function Liamduckett\Structures\iterable_slice;
@@ -15,6 +16,8 @@ use function Liamduckett\Structures\iterable_slice;
  */
 class RemovingTest extends TestCase
 {
+    use TestsGenerators;
+
     // Slice ---
 
     public function testSliceExtractsItemsAtOffset(): void
@@ -107,5 +110,14 @@ class RemovingTest extends TestCase
         $result = iterable_slice([], 0);
 
         $this->assertSame([], iterator_to_array($result));
+    }
+
+    public function testSliceRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_slice($this->buildPartiallyConsumedGenerator([1, 2, 3]), 0);
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 }

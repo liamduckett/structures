@@ -4,6 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 
 use function Liamduckett\Structures\iterable_contains;
 use function Liamduckett\Structures\iterable_contains_key;
@@ -16,6 +17,8 @@ use function Liamduckett\Structures\iterable_empty;
  */
 class ContainingTest extends TestCase
 {
+    use TestsGenerators;
+
     // Contains ---
 
     public function testContainsReturnsTrueForExistingItem(): void
@@ -67,6 +70,13 @@ class ContainingTest extends TestCase
         $this->assertFalse(iterable_contains([], 1));
     }
 
+    public function testContainsRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_contains($this->buildPartiallyConsumedGenerator([1, 2]), 2);
+    }
+
     // Contains Key ---
 
     public function testContainsKeyReturnsTrueForExistingKey(): void
@@ -116,6 +126,13 @@ class ContainingTest extends TestCase
         $this->assertFalse(iterable_contains_key([], 'a'));
     }
 
+    public function testContainsKeyRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_contains_key($this->buildPartiallyConsumedGenerator(['foo' => 1, 'bar' => 2]), 'bar');
+    }
+
     // Empty ---
 
     public function testEmptyReturnsTrueForEmptyArray(): void
@@ -154,5 +171,12 @@ class ContainingTest extends TestCase
         })();
 
         $this->assertTrue(iterable_empty($generator));
+    }
+
+    public function testEmptyRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_empty($this->buildPartiallyConsumedGenerator([1, 2]));
     }
 }

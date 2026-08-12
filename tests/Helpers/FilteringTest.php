@@ -4,6 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 
 use function Liamduckett\Structures\iterable_filter;
 use function Liamduckett\Structures\iterable_search;
@@ -15,6 +16,8 @@ use function Liamduckett\Structures\iterable_search;
  */
 class FilteringTest extends TestCase
 {
+    use TestsGenerators;
+
     // Filter ---
 
     public function testFilterAcceptsArrays(): void
@@ -74,6 +77,15 @@ class FilteringTest extends TestCase
         $this->assertSame([], iterator_to_array($result));
     }
 
+    public function testFilterRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_filter($this->buildPartiallyConsumedGenerator([1, 2]), static fn (int $value): bool => true);
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
+    }
+
     // Search ---
 
     public function testSearchReturnsKeysOfMatchingValues(): void
@@ -116,5 +128,14 @@ class FilteringTest extends TestCase
         $result = iterable_search([0, '', false], null);
 
         $this->assertSame([], iterator_to_array($result));
+    }
+
+    public function testSearchRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_search($this->buildPartiallyConsumedGenerator([1, 2]), 2);
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 }

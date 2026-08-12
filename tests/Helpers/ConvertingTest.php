@@ -4,6 +4,7 @@ namespace Tests\Helpers;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use Tests\Concerns\TestsGenerators;
 
 use function Liamduckett\Structures\iterable_to_array;
 use function Liamduckett\Structures\iterable_to_generator;
@@ -16,6 +17,8 @@ use function Liamduckett\Structures\value;
  */
 class ConvertingTest extends TestCase
 {
+    use TestsGenerators;
+
     // Value ---
 
     public function testValueReturnsIterablesUnchanged(): void
@@ -59,6 +62,15 @@ class ConvertingTest extends TestCase
         $result = value(new ArrayIterator([1, 2, 3]));
 
         $this->assertSame([1, 2, 3], iterator_to_array($result));
+    }
+
+    public function testValueReturnsPartiallyConsumedGeneratorsUnchanged(): void
+    {
+        $generator = $this->buildPartiallyConsumedGenerator([1, 2]);
+
+        $result = value($generator);
+
+        $this->assertSame($generator, $result);
     }
 
     // To Array ---
@@ -111,6 +123,13 @@ class ConvertingTest extends TestCase
         $this->assertSame([], $result); // @phpstan-ignore method.alreadyNarrowedType
     }
 
+    public function testToArrayRejectsPartiallyConsumedGenerators(): void
+    {
+        $this->expectGeneratorAlreadyRunException();
+
+        iterable_to_array($this->buildPartiallyConsumedGenerator([1, 2]));
+    }
+
     // To Generator ---
 
     public function testToGeneratorAcceptsArrays(): void
@@ -154,5 +173,14 @@ class ConvertingTest extends TestCase
         $result = iterable_to_generator([]);
 
         $this->assertSame([], iterator_to_array($result));
+    }
+
+    public function testToGeneratorRejectsPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_to_generator($this->buildPartiallyConsumedGenerator([1, 2]));
+
+        $this->expectGeneratorAlreadyRunException();
+
+        iterator_to_array($result);
     }
 }
