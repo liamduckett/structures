@@ -1,5 +1,6 @@
 <?php
 
+use function Liamduckett\Structures\iterable_resume;
 use function Liamduckett\Structures\iterable_to_array;
 use function Liamduckett\Structures\iterable_to_generator;
 use function Liamduckett\Structures\value;
@@ -40,5 +41,30 @@ assertType('Generator<int, int, mixed, void>', $result);
 /** @var array<non-empty-string, int> $notEmptyStringArray */
 $notEmptyStringArray = [];
 $result = iterable_to_generator($notEmptyStringArray);
+
+assertType('Generator<non-empty-string, int, mixed, void>', $result);
+
+// Resume ---
+
+assertType('array{1, 2, 3}', iterable_resume([1, 2, 3]));
+
+/** @var ArrayIterator<int, string> $arrayIterator */
+$arrayIterator = new ArrayIterator();
+$result = iterable_resume($arrayIterator);
+
+assertType('ArrayIterator<int, string>', $result);
+
+$result = iterable_resume((static function () {
+    yield 'a' => 1;
+
+    yield 'b' => 2;
+})());
+
+assertType("Generator<'a'|'b', int, mixed, void>", $result);
+
+$stringKeyedGenerator = (static function () use ($notEmptyStringArray): Generator {
+    yield from $notEmptyStringArray;
+})();
+$result = iterable_resume($stringKeyedGenerator);
 
 assertType('Generator<non-empty-string, int, mixed, void>', $result);

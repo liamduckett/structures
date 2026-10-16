@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsGenerators;
 use Tests\Concerns\TestsStructures;
 
+use function Liamduckett\Structures\iterable_resume;
+
 /**
  * @internal
  *
@@ -69,6 +71,20 @@ class CreatingTest extends TestCase
         $this->expectGeneratorAlreadyRunException();
 
         $dictionary->array();
+    }
+
+    public function testMakeAcceptsResumedPartiallyConsumedGenerators(): void
+    {
+        $dictionary = Dictionary::make(iterable_resume($this->buildPartiallyConsumedGenerator([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 3,
+        ])));
+
+        $this->assertDictionary($dictionary, [
+            'bar' => 2,
+            'baz' => 3,
+        ]);
     }
 
     public function testMakeDefaultsToEmpty(): void

@@ -8,24 +8,16 @@ use Generator;
 trait TestsGenerators
 {
     /**
-     *  Builds a generator whose cursor has advanced past its first yield,
-     *  which is the state PHP refuses to rewind.
-     *
-     *  Pass at least two items. A single item leaves the generator exhausted
-     *  rather than partially consumed, which fails differently.
-     *
-     * @template TKey of int|non-empty-string
+     * @template TKey of int|string
      * @template T
      *
      * @param non-empty-array<TKey, T> $items
      *
-     * @return Generator<TKey, T>
+     * @return Generator<TKey, T, mixed, void>
      */
     protected function buildPartiallyConsumedGenerator(array $items): Generator
     {
-        $generator = (static function () use ($items): Generator {
-            yield from $items;
-        })();
+        $generator = self::yieldFrom($items);
 
         $generator->next();
 
@@ -40,5 +32,18 @@ trait TestsGenerators
     protected function expectGeneratorAlreadyClosedException(): void
     {
         $this->expectExceptionObject(new Exception('Cannot traverse an already closed generator'));
+    }
+
+    /**
+     * @template TKey of int|string
+     * @template T
+     *
+     * @param array<TKey, T> $items
+     *
+     * @return Generator<TKey, T, mixed, void>
+     */
+    protected static function yieldFrom(array $items): Generator
+    {
+        yield from $items;
     }
 }

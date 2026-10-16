@@ -229,6 +229,30 @@ function iterable_to_generator(iterable $iterable): Generator
     }
 }
 
+/**
+ * @template TKey of int|string
+ * @template TValue
+ * @template T of iterable<TKey, TValue>
+ *
+ * @param T $iterable
+ *
+ * @return ($iterable is Generator<TKey, TValue, mixed, mixed> ? Generator<TKey, TValue, mixed, void> : T)
+ */
+function iterable_resume(iterable $iterable): iterable
+{
+    if (!$iterable instanceof Generator) {
+        return $iterable;
+    }
+
+    return (static function () use ($iterable): Generator {
+        while ($iterable->valid()) {
+            yield $iterable->key() => $iterable->current();
+
+            $iterable->next();
+        }
+    })();
+}
+
 // Filtering ---
 
 /**

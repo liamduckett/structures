@@ -3,9 +3,12 @@
 namespace Tests\Helpers;
 
 use ArrayIterator;
+use ArrayObject;
+use IteratorIterator;
 use PHPUnit\Framework\TestCase;
 use Tests\Concerns\TestsGenerators;
 
+use function Liamduckett\Structures\iterable_resume;
 use function Liamduckett\Structures\iterable_to_array;
 use function Liamduckett\Structures\iterable_to_generator;
 use function Liamduckett\Structures\value;
@@ -182,5 +185,103 @@ class ConvertingTest extends TestCase
         $this->expectGeneratorAlreadyRunException();
 
         iterator_to_array($result);
+    }
+
+    // Resume ---
+
+    public function testResumeYieldsRemainingItemsOfPartiallyConsumedGenerators(): void
+    {
+        $result = iterable_resume($this->buildPartiallyConsumedGenerator([1, 2, 3]));
+
+        $this->assertSame([2, 3], iterator_to_array($result, false));
+    }
+
+    public function testResumeYieldsAllItemsOfUnstartedGenerators(): void
+    {
+        $result = iterable_resume((static function () {
+            yield 1;
+
+            yield 2;
+        })());
+
+        $this->assertSame([1, 2], iterator_to_array($result, false));
+    }
+
+    public function testResumeReturnsEmptyForExhaustedGenerators(): void
+    {
+        $generator = (static function () {
+            yield 1;
+
+            yield 2;
+        })();
+
+        iterator_to_array($generator);
+
+        $this->assertSame([], iterator_to_array(iterable_resume($generator), false));
+    }
+
+    public function testResumePreservesKeys(): void
+    {
+        $result = iterable_resume($this->buildPartiallyConsumedGenerator([
+            'foo' => 1,
+            'bar' => 2,
+            'baz' => 3,
+        ]));
+
+        $this->assertSame(['bar' => 2, 'baz' => 3], iterator_to_array($result));
+    }
+
+    public function testResumeYieldsItemUnderCursorAgainAfterBreak(): void
+    {
+        $generator = (static function () {
+            yield 1;
+
+            yield 2;
+
+            yield 3;
+        })();
+
+        $consumed = [];
+
+        foreach ($generator as $value) {
+            $consumed[] = $value;
+
+            if (2 === $value) {
+                break;
+            }
+        }
+
+        $this->assertSame([1, 2], $consumed);
+        $this->assertSame([2, 3], iterator_to_array(iterable_resume($generator), false));
+    }
+
+    public function testResumeReturnsArraysUnchanged(): void
+    {
+        $items = [1, 2, 3];
+
+        $this->assertSame($items, iterable_resume($items)); // @phpstan-ignore method.alreadyNarrowedType
+    }
+
+    public function testResumeReturnsIteratorsUnchanged(): void
+    {
+        $iterator = new ArrayIterator([1, 2, 3]);
+
+        $iterator->next();
+
+        $this->assertSame($iterator, iterable_resume($iterator));
+    }
+
+    public function testResumeLeavesIteratorsThatInitialiseOnRewindIntact(): void
+    {
+        $iterator = new IteratorIterator($this->buildPartiallyConsumedGenerator([1, 2, 3]));
+
+        $this->assertSame($iterator, iterable_resume($iterator));
+    }
+
+    public function testResumeReturnsIteratorAggregatesUnchanged(): void
+    {
+        $aggregate = new ArrayObject([1, 2, 3]);
+
+        $this->assertSame($aggregate, iterable_resume($aggregate));
     }
 }
