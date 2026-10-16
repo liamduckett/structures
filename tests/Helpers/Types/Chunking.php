@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
 use function Liamduckett\Structures\iterable_chunk;
 use function Liamduckett\Structures\iterable_chunk_values;
 use function PHPStan\Testing\assertType;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
 use function Liamduckett\Structures\iterable_map;
 use function PHPStan\Testing\assertType;
 

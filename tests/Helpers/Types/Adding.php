@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
 use function Liamduckett\Structures\iterable_merge;
 use function Liamduckett\Structures\iterable_set;
 use function PHPStan\Testing\assertType;

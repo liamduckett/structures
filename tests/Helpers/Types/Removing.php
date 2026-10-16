@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
 use function Liamduckett\Structures\iterable_slice;
 use function PHPStan\Testing\assertType;
 

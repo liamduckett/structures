@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
 use function Liamduckett\Structures\iterable_filter;
 use function Liamduckett\Structures\iterable_search;
 use function PHPStan\Testing\assertType;

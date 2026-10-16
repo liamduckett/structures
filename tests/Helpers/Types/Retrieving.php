@@ -1,5 +1,9 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
+use ArrayIterator;
+
 use function Liamduckett\Structures\iterable_count;
 use function Liamduckett\Structures\iterable_first;
 use function Liamduckett\Structures\iterable_get;

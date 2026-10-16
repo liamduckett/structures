@@ -1,5 +1,10 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
+use ArrayIterator;
+use Generator;
+
 use function Liamduckett\Structures\iterable_resume;
 use function Liamduckett\Structures\iterable_to_array;
 use function Liamduckett\Structures\iterable_to_generator;

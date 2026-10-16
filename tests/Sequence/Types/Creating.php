@@ -1,5 +1,8 @@
 <?php
 
+namespace Tests\Sequence\Types;
+
+use Generator;
 use Liamduckett\Structures\Sequence;
 
 use function PHPStan\Testing\assertType;

@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Dictionary\Types;
+
 use Liamduckett\Structures\Dictionary;
 
 use function PHPStan\Testing\assertType;

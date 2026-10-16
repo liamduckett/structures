@@ -1,5 +1,9 @@
 <?php
 
+namespace Tests\Helpers\Types;
+
+use ArrayIterator;
+
 use function Liamduckett\Structures\iterable_contains;
 use function Liamduckett\Structures\iterable_contains_key;
 use function Liamduckett\Structures\iterable_empty;

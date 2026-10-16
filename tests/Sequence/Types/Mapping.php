@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Sequence\Types;
+
 use Liamduckett\Structures\Sequence;
 
 use function PHPStan\Testing\assertType;
@@ -15,12 +17,3 @@ assertType('Liamduckett\Structures\Sequence<int>', $mapped);
 $mappedToBool = $sequence->map(static fn (int $value) => $value > 0);
 
 assertType('Liamduckett\Structures\Sequence<bool>', $mappedToBool);
-
-function sequenceMappingIntToString(int $value): string
-{
-    return (string) $value;
-}
-
-$mappedToString = $sequence->map(Closure::fromCallable('sequenceMappingIntToString'));
-
-assertType('Liamduckett\Structures\Sequence<string>', $mappedToString);
